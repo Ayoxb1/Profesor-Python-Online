@@ -84,18 +84,18 @@
       justify-content: center;
       gap: 16px;
       z-index: 10;
-      transition: opacity 0.4s ease;
+      transition: opacity 0.5s ease;
       padding: 24px;
       text-align: center;
     }
 
     .spinner {
-      width: 50px;
-      height: 50px;
-      border: 4px solid #334155;
+      width: 52px;
+      height: 52px;
+      border: 4px solid #1e293b;
       border-top: 4px solid #38bdf8;
       border-radius: 50%;
-      animation: spin 1s linear infinite;
+      animation: spin 0.9s linear infinite;
     }
 
     @keyframes spin {
@@ -106,6 +106,26 @@
       font-size: 1rem;
       color: #cbd5e1;
       font-weight: 500;
+      min-height: 24px;
+    }
+
+    /* Barra de progreso visual */
+    .progress-bar-container {
+      width: 280px;
+      height: 8px;
+      background: #1e293b;
+      border-radius: 9999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #0284c7, #38bdf8);
+      border-radius: 9999px;
+      transition: width 0.4s ease;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
     }
 
     #error-box {
@@ -166,7 +186,10 @@
     <!-- Pantalla de carga y estado -->
     <div id="loading-screen">
       <div class="spinner" id="spinner"></div>
-      <p id="loading-text">Conectando con el entorno WebAssembly...</p>
+      <p id="loading-text">Conectando con el motor WebAssembly...</p>
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
       <div id="error-box"></div>
     </div>
 
@@ -182,6 +205,13 @@
   </footer>
 
   <script>
+    function updateProgress(percent, text) {
+      const progressBar = document.getElementById("progress-bar");
+      const statusText = document.getElementById("loading-text");
+      if (progressBar) progressBar.style.width = percent + "%";
+      if (statusText) statusText.innerText = text;
+    }
+
     async function waitForCheerpJ() {
       let attempts = 0;
       while (typeof cheerpjInit !== "function" && attempts < 50) {
@@ -197,40 +227,56 @@
     }
 
     async function initGame() {
-      const statusText = document.getElementById("loading-text");
       const loadingScreen = document.getElementById("loading-screen");
       const errorBox = document.getElementById("error-box");
       const spinner = document.getElementById("spinner");
       const displayContainer = document.getElementById("cheerpj-display");
 
       try {
-        statusText.innerText = "Cargando motor de CheerpJ 3...";
+        updateProgress(20, "Descargando motor CheerpJ 3...");
         await waitForCheerpJ();
 
-        statusText.innerText = "Inicializando máquina virtual Java WebAssembly...";
+        updateProgress(45, "Inicializando máquina virtual Java...");
         await cheerpjInit();
 
-        statusText.innerText = "Creando lienzo gráfico AWT/Swing...";
+        updateProgress(70, "Preparando lienzo visual AWT/Swing...");
         cheerpjCreateDisplay(1024, 768, displayContainer);
 
-        statusText.innerText = "Descargando e iniciando juego.jar...";
+        // Ocultar pantalla de carga automáticamente tan pronto como CheerpJ inserte el canvas
+        const observer = new MutationObserver(() => {
+          if (displayContainer.children.length > 0) {
+            updateProgress(100, "¡Listo! Iniciando juego...");
+            setTimeout(() => {
+              loadingScreen.style.opacity = "0";
+              setTimeout(() => {
+                loadingScreen.style.display = "none";
+              }, 400);
+            }, 600);
+            observer.disconnect();
+          }
+        });
+        observer.observe(displayContainer, { childList: true, subtree: true });
 
+        updateProgress(85, "Cargando juego.jar y recursos...");
+        
         // Ejecutar el JAR ubicado en la raíz del servidor web
         const exitCodePromise = cheerpjRunJar("/app/juego.jar");
 
-        // Ocultar overlay de carga tras inicialización
+        // Respaldo de seguridad si el observer no saltase por cualquier motivo
         setTimeout(() => {
-          loadingScreen.style.opacity = "0";
-          setTimeout(() => {
-            loadingScreen.style.display = "none";
-          }, 400);
-        }, 1200);
+          if (loadingScreen.style.display !== "none") {
+            loadingScreen.style.opacity = "0";
+            setTimeout(() => {
+              loadingScreen.style.display = "none";
+            }, 400);
+          }
+        }, 5000);
 
         await exitCodePromise;
       } catch (err) {
         console.error("Error al ejecutar el juego:", err);
         spinner.style.display = "none";
-        statusText.innerText = "No se pudo iniciar el juego.";
+        document.getElementById("loading-text").innerText = "No se pudo iniciar el juego.";
         errorBox.style.display = "block";
         errorBox.innerHTML = `<strong>Detalle del error:</strong> ${err.message || err}<br/><br/>
         <em>Si el error persiste, comprueba la consola de desarrollador (F12) para más detalles.</em>`;
