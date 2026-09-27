@@ -32,21 +32,13 @@ export default function GameEngine() {
       ? currentNode.description(gameState)
       : currentNode.description;
 
-  // GESTOR DE AUDIO: Transición limpia entre escenas (Fade out anterior -> Fade in nueva)
+  // GESTOR DE AUDIO: Transición limpia entre escenas con corte inmediato del audio anterior
   useEffect(() => {
-    if (currentNode.bgMusic) {
-      audioManager.playBgm(
-        currentNode.bgMusic,
-        currentNode.id !== 'intro_video',
-        currentNode.id === 'intro_video' ? 0.8 : 0.45
-      );
-    } else {
-      audioManager.stopBgm();
-    }
-
-    if (currentNode.soundEffect && currentNode.id !== 'intro_video') {
-      audioManager.playSfx(currentNode.soundEffect, 0.65);
-    }
+    audioManager.handleSceneTransition(
+      currentNode.bgMusic,
+      currentNode.soundEffect,
+      currentNode.id === 'intro_video'
+    );
   }, [currentNode.id, currentNode.bgMusic, currentNode.soundEffect]);
 
   // EFECTO MÁQUINA DE ESCRIBIR
@@ -98,7 +90,7 @@ export default function GameEngine() {
       if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) return;
 
       if (e.key === 'j' || e.key === 'J') {
-        audioManager.playSfx('/audio/PasandoPaginaDeLibro.mp3');
+        audioManager.playUiClick();
         setIsJournalOpen((prev) => !prev);
         return;
       }
@@ -117,7 +109,7 @@ export default function GameEngine() {
   }, [currentNode, gameState]);
 
   const handleNavigate = (nodeId: string, statePatch?: Partial<GameState>) => {
-    audioManager.playSfx('/audio/PasandoPaginaDeLibro.mp3', 0.4);
+    audioManager.playUiClick();
     setGameState((prev) => {
       const updated: GameState = {
         ...prev,
@@ -133,7 +125,7 @@ export default function GameEngine() {
   };
 
   const handleChoice = (choice: Choice) => {
-    audioManager.playSfx('/audio/PasandoPaginaDeLibro.mp3', 0.4);
+    audioManager.playUiClick();
     let patch: Partial<GameState> = {};
     if (choice.action) {
       const actionResult = choice.action(gameState);
@@ -156,7 +148,7 @@ export default function GameEngine() {
     const val = inputValue.trim();
     if (!val && !currentNode.inputConfig.defaultValue) return;
 
-    audioManager.playSfx('/audio/PasandoPaginaDeLibro.mp3', 0.5);
+    audioManager.playUiClick();
     const finalVal = val || currentNode.inputConfig.defaultValue || '';
     const result = currentNode.inputConfig.onSubmit(finalVal, gameState);
     handleNavigate(result.nextNodeId, result.statePatch);
@@ -211,13 +203,11 @@ export default function GameEngine() {
         <AudioNotificationBanner
           onAudioActivated={() => {
             setShowAudioBanner(false);
-            if (currentNode.bgMusic) {
-              audioManager.playBgm(
-                currentNode.bgMusic,
-                currentNode.id !== 'intro_video',
-                currentNode.id === 'intro_video' ? 0.8 : 0.45
-              );
-            }
+            audioManager.handleSceneTransition(
+              currentNode.bgMusic,
+              currentNode.soundEffect,
+              currentNode.id === 'intro_video'
+            );
           }}
           onDismiss={() => setShowAudioBanner(false)}
         />
@@ -309,7 +299,7 @@ export default function GameEngine() {
           {/* BOTÓN RECORDATORIOS / CUADERNO (TÁCTIL SKEUOMÓRFICO) */}
           <button
             onClick={() => {
-              audioManager.playSfx('/audio/PasandoPaginaDeLibro.mp3', 0.4);
+              audioManager.playUiClick();
               setIsJournalOpen(true);
             }}
             className="btn-layton-tactile px-3.5 py-2 rounded-xl text-xs font-layton font-bold text-amber-200 flex items-center gap-2 pulse-gold group shadow-md"
@@ -334,7 +324,7 @@ export default function GameEngine() {
           {/* BOTÓN MOCHILA */}
           <button
             onClick={() => {
-              audioManager.playSfx('/audio/PasandoPaginaDeLibro.mp3', 0.4);
+              audioManager.playUiClick();
               setIsInventoryOpen(!isInventoryOpen);
             }}
             className="btn-layton-tactile px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 text-stone-200"

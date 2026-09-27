@@ -1,24 +1,34 @@
 /**
  * AudioManager - Gestor de audio centralizado para El Profesor Python
- * Maneja canales independientes para BGM (Música de Fondo) y SFX (Efectos de Sonido).
- * Garantiza transiciones suaves con fade-out/fade-in evitando cualquier solapamiento caótico.
+ * Maneja canales independientes para BGM (Música de Fondo), Escena SFX y UI SFX.
+ * Garantiza de forma estricta que al cambiar rápido de escena NINGÚN audio anterior
+ * continúe sonando o se superponga.
  */
 
 class AudioManager {
   private static instance: AudioManager | null = null;
 
+  // Canal BGM (Música de fondo)
   private currentBgm: HTMLAudioElement | null = null;
   private currentBgmSrc: string | null = null;
-  private currentTargetVolume: number = 0.5;
   private bgmVolume: number = 0.55;
+
+  // Canal SFX de Escena (Efectos de ambiente, voces, diálogos, jeroglíficos)
+  private currentSceneSfx: HTMLAudioElement | null = null;
   private sfxVolume: number = 0.75;
+
+  // Canal SFX de UI (Clicks de botones cortos)
+  private uiClickAudio: HTMLAudioElement | null = null;
+
   private isMuted: boolean = false;
   private isUnlocked: boolean = false;
-  private fadeInterval: NodeJS.Timeout | null = null;
 
   private constructor() {
-    // Si estamos en el navegador, escuchar la primera interacción de usuario
     if (typeof window !== 'undefined') {
+      // Instanciar un audio reutilizable para el click de UI
+      this.uiClickAudio = new Audio('/audio/PasandoPaginaDeLibro.mp3');
+      this.uiClickAudio.volume = 0.35;
+
       const handleFirstInteraction = () => {
         this.unlock();
         window.removeEventListener('click', handleFirstInteraction);
@@ -40,13 +50,13 @@ class AudioManager {
   }
 
   /**
-   * Desbloquea el audio del navegador tras la primera interacción del usuario.
+   * Desbloquea el audio del navegador en la primera interacción.
    */
   public async unlock(): Promise<boolean> {
     this.isUnlocked = true;
     try {
       if (this.currentBgm && !this.isMuted) {
-        this.currentBgm.volume = this.currentTargetVolume || this.bgmVolume;
+        this.currentBgm.volume = this.bgmVolume;
         await this.currentBgm.play();
       }
       return true;
@@ -60,54 +70,56 @@ class AudioManager {
   }
 
   /**
-   * Reproduce una pista de música de fondo con fade-out de la anterior y fade-in de la nueva.
+   * Transición de Escena Segura:
+   * Corta INMEDIATAMENTE cualquier efecto de sonido de la escena anterior.
+   * Si la música de fondo cambia, corta la anterior al instante e inicia la nueva sin solapes.
+   */
+  public handleSceneTransition(bgMusic?: string, soundEffect?: string, isIntroVideo: boolean = false): void {
+    // 1. CORTAR INMEDIATAMENTE cualquier SFX de la escena previa
+    this.stopSceneSfx();
+
+    // 2. GESTIONAR MÚSICA DE FONDO (BGM)
+    if (bgMusic) {
+      this.playBgm(bgMusic, !isIntroVideo, isIntroVideo ? 0.8 : this.bgmVolume);
+    } else {
+      this.stopBgm();
+    }
+
+    // 3. REPRODUCIR NUEVO SFX DE ESCENA (si existe y no es el vídeo de intro)
+    if (soundEffect && !isIntroVideo) {
+      this.playSceneSfx(soundEffect);
+    }
+  }
+
+  /**
+   * Reproduce una pista de música de fondo garantizando que la anterior se corte por completo.
    */
   public playBgm(src: string, loop: boolean = true, targetVolume?: number): void {
     if (!src) return;
 
-    const normalizedTarget = targetVolume !== undefined ? targetVolume : this.bgmVolume;
-    this.currentTargetVolume = normalizedTarget;
+    const vol = targetVolume !== undefined ? targetVolume : this.bgmVolume;
 
-    // Si ya está sonando esta misma pista, no reiniciar innecesariamente
+    // Si ya está sonando exactamente esta pista y no está pausada, mantenerla sin reiniciar
     if (this.currentBgm && this.currentBgmSrc === src && !this.currentBgm.paused) {
+      this.currentBgm.volume = vol;
       return;
     }
 
-    // Cancelar cualquier transición de fade en progreso
-    if (this.fadeInterval) {
-      clearInterval(this.fadeInterval);
-      this.fadeInterval = null;
+    // CORTE INMEDIATO Y LIMPIO DE LA PISTA ANTERIOR (sin intervals que provoquen colisiones)
+    if (this.currentBgm) {
+      try {
+        this.currentBgm.pause();
+        this.currentBgm.currentTime = 0;
+        this.currentBgm.src = '';
+      } catch (e) {}
+      this.currentBgm = null;
+      this.currentBgmSrc = null;
     }
 
-    const previousAudio = this.currentBgm;
-
-    // Si había una pista sonando, aplicar fade-out gradual
-    if (previousAudio && !previousAudio.paused) {
-      const fadeStepTime = 20;
-      const totalSteps = 12;
-      const stepDec = previousAudio.volume / totalSteps;
-
-      this.fadeInterval = setInterval(() => {
-        if (previousAudio.volume > stepDec) {
-          previousAudio.volume = Math.max(0, previousAudio.volume - stepDec);
-        } else {
-          clearInterval(this.fadeInterval!);
-          this.fadeInterval = null;
-          previousAudio.pause();
-          previousAudio.currentTime = 0;
-          this.startNewBgm(src, loop, normalizedTarget);
-        }
-      }, fadeStepTime);
-    } else {
-      this.startNewBgm(src, loop, normalizedTarget);
-    }
-  }
-
-  private startNewBgm(src: string, loop: boolean, targetVol: number): void {
     try {
       const audio = new Audio(src);
       audio.loop = loop;
-      audio.volume = targetVol;
+      audio.volume = vol;
       this.currentBgm = audio;
       this.currentBgmSrc = src;
 
@@ -119,68 +131,108 @@ class AudioManager {
               this.isUnlocked = true;
             })
             .catch(() => {
-              // Navegador bloqueó autoplay; sonará en la primera pulsación gracias a unlock()
+              // Navegador esperará al unlock de primera interacción
             });
         }
       }
     } catch (e) {
-      console.warn('[AudioManager] Error al instanciar BGM:', e);
+      console.warn('[AudioManager] Error iniciando BGM:', e);
     }
   }
 
   /**
-   * Reproduce un efecto de sonido puntual en un canal aislado sin afectar la música.
+   * Detiene de inmediato la música de fondo actual.
    */
-  public playSfx(src: string, customVolume?: number): void {
+  public stopBgm(): void {
+    if (this.currentBgm) {
+      try {
+        this.currentBgm.pause();
+        this.currentBgm.currentTime = 0;
+        this.currentBgm.src = '';
+      } catch (e) {}
+      this.currentBgm = null;
+      this.currentBgmSrc = null;
+    }
+  }
+
+  /**
+   * Reproduce un efecto de sonido de escena rastreado.
+   * Corta de inmediato cualquier SFX previo de escena.
+   */
+  public playSceneSfx(src: string, customVolume?: number): void {
     if (!src || this.isMuted) return;
+
+    this.stopSceneSfx();
 
     try {
       const sfx = new Audio(src);
       const vol = customVolume !== undefined ? customVolume : this.sfxVolume;
       sfx.volume = Math.min(1, Math.max(0, vol));
+      this.currentSceneSfx = sfx;
+
       sfx.play().catch(() => {});
+
+      sfx.onended = () => {
+        if (this.currentSceneSfx === sfx) {
+          this.currentSceneSfx = null;
+        }
+      };
     } catch (e) {
-      console.warn('[AudioManager] Error al reproducir SFX:', e);
+      console.warn('[AudioManager] Error iniciando Scene SFX:', e);
     }
   }
 
   /**
-   * Detiene la música de fondo con un fade-out suave.
+   * Alias de compatibilidad para reproducir efectos de sonido de escena.
    */
-  public stopBgm(): void {
-    if (!this.currentBgm) return;
+  public playSfx(src: string, customVolume?: number): void {
+    this.playSceneSfx(src, customVolume);
+  }
 
-    if (this.fadeInterval) {
-      clearInterval(this.fadeInterval);
-      this.fadeInterval = null;
+  /**
+   * Detiene y corta de inmediato el efecto de sonido de escena actual.
+   */
+  public stopSceneSfx(): void {
+    if (this.currentSceneSfx) {
+      try {
+        this.currentSceneSfx.pause();
+        this.currentSceneSfx.currentTime = 0;
+        this.currentSceneSfx.src = '';
+      } catch (e) {}
+      this.currentSceneSfx = null;
     }
+  }
 
-    const audio = this.currentBgm;
-    const fadeStepTime = 20;
-    const totalSteps = 10;
-    const stepDec = audio.volume / totalSteps;
+  /**
+   * Reproduce el sonido de clic de UI corto e instantáneo.
+   */
+  public playUiClick(): void {
+    if (this.isMuted) return;
 
-    this.fadeInterval = setInterval(() => {
-      if (audio.volume > stepDec) {
-        audio.volume = Math.max(0, audio.volume - stepDec);
-      } else {
-        clearInterval(this.fadeInterval!);
-        this.fadeInterval = null;
-        audio.pause();
-        audio.currentTime = 0;
-        this.currentBgm = null;
-        this.currentBgmSrc = null;
-      }
-    }, fadeStepTime);
+    if (this.uiClickAudio) {
+      try {
+        this.uiClickAudio.currentTime = 0;
+        this.uiClickAudio.play().catch(() => {});
+      } catch (e) {}
+    }
+  }
+
+  /**
+   * Detiene absolutamente todo el audio en reproducción.
+   */
+  public stopAll(): void {
+    this.stopBgm();
+    this.stopSceneSfx();
   }
 
   public setMuted(muted: boolean): void {
     this.isMuted = muted;
-    if (this.currentBgm) {
-      if (muted) {
-        this.currentBgm.pause();
-      } else {
-        this.currentBgm.volume = this.currentTargetVolume || this.bgmVolume;
+    if (muted) {
+      if (this.currentBgm) this.currentBgm.pause();
+      if (this.currentSceneSfx) this.currentSceneSfx.pause();
+    } else {
+      if (this.currentBgm && this.isUnlocked) {
+        this.currentBgm.volume = this.bgmVolume;
         this.currentBgm.play().catch(() => {});
       }
     }
@@ -197,7 +249,6 @@ class AudioManager {
 
   public setBgmVolume(volume: number): void {
     this.bgmVolume = Math.min(1, Math.max(0, volume));
-    this.currentTargetVolume = this.bgmVolume;
     if (this.currentBgm) {
       this.currentBgm.volume = this.bgmVolume;
     }
