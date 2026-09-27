@@ -5,22 +5,23 @@ import { GameState, StoryNode, Choice, InventoryItem } from '../types/game';
 import { STORY_NODES as storyNodes, INITIAL_GAME_STATE as initialGameState } from '../data/storyNodes';
 import DetectiveJournal from './DetectiveJournal';
 import RiverPuzzle from './RiverPuzzle';
+import AudioNotificationBanner from './AudioNotificationBanner';
+import { audioManager } from '../utils/audioManager';
 
-// Números romanos para darle un toque aristocrático victoriano a las opciones
+// Numeración romana para el orden clásico de deducciones
 const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII'];
 
 export default function GameEngine() {
   const [gameState, setGameState] = useState<GameState>(initialGameState);
   const [inputValue, setInputValue] = useState<string>('');
-  const [audioEnabled, setAudioEnabled] = useState<boolean>(true);
-  const [audioVolume, setAudioVolume] = useState<number>(0.4);
+  const [isMuted, setIsMuted] = useState<boolean>(false);
   const [isInventoryOpen, setIsInventoryOpen] = useState<boolean>(false);
   const [isJournalOpen, setIsJournalOpen] = useState<boolean>(false);
+  const [showAudioBanner, setShowAudioBanner] = useState<boolean>(true);
   const [displayedText, setDisplayedText] = useState<string>('');
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
 
-  const bgAudioRef = useRef<HTMLAudioElement | null>(null);
   const typewriterTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const currentNode: StoryNode =
@@ -31,16 +32,20 @@ export default function GameEngine() {
       ? currentNode.description(gameState)
       : currentNode.description;
 
-  // Reproducir un sonido de clic táctil suave
-  const playClickSfx = () => {
-    try {
-      const clickAudio = new Audio('/audio/PasandoPaginaDeLibro.mp3');
-      clickAudio.volume = 0.35;
-      clickAudio.play().catch(() => {});
-    } catch (e) {}
-  };
+  // GESTOR DE AUDIO: Transición limpia entre escenas (Fade out anterior -> Fade in nueva)
+  useEffect(() => {
+    if (currentNode.bgMusic) {
+      audioManager.playBgm(currentNode.bgMusic, true, 0.45);
+    } else {
+      audioManager.stopBgm();
+    }
 
-  // Efecto máquina de escribir
+    if (currentNode.soundEffect) {
+      audioManager.playSfx(currentNode.soundEffect, 0.65);
+    }
+  }, [currentNode.id, currentNode.bgMusic, currentNode.soundEffect]);
+
+  // EFECTO MÁQUINA DE ESCRIBIR
   useEffect(() => {
     if (typewriterTimerRef.current) {
       clearInterval(typewriterTimerRef.current);
@@ -50,7 +55,7 @@ export default function GameEngine() {
     setIsTyping(true);
 
     let charIndex = 0;
-    const speed = 12;
+    const speed = 11; // ms por carácter
 
     typewriterTimerRef.current = setInterval(() => {
       charIndex++;
@@ -73,40 +78,6 @@ export default function GameEngine() {
     setIsTyping(false);
   };
 
-  // Gestión de música y efectos
-  useEffect(() => {
-    if (!audioEnabled || gameState.audioMuted) {
-      if (bgAudioRef.current) {
-        bgAudioRef.current.pause();
-      }
-      return;
-    }
-
-    if (currentNode.bgMusic) {
-      if (!bgAudioRef.current) {
-        bgAudioRef.current = new Audio();
-        bgAudioRef.current.loop = true;
-      }
-      const targetSrc = currentNode.bgMusic;
-      if (
-        bgAudioRef.current.src !== window.location.origin + targetSrc &&
-        !bgAudioRef.current.src.endsWith(targetSrc)
-      ) {
-        bgAudioRef.current.src = targetSrc;
-        bgAudioRef.current.volume = audioVolume;
-        bgAudioRef.current.play().catch(() => {});
-      }
-    }
-
-    if (currentNode.soundEffect) {
-      try {
-        const sfx = new Audio(currentNode.soundEffect);
-        sfx.volume = Math.min(1, audioVolume * 1.5);
-        sfx.play().catch(() => {});
-      } catch (e) {}
-    }
-  }, [currentNode.bgMusic, currentNode.soundEffect, audioEnabled, gameState.audioMuted, audioVolume]);
-
   // Manejo de Auto-avance para cinemáticas
   useEffect(() => {
     if (currentNode.autoAdvanceMs && currentNode.nextAutoNodeId) {
@@ -117,12 +88,13 @@ export default function GameEngine() {
     }
   }, [currentNode.id, currentNode.autoAdvanceMs, currentNode.nextAutoNodeId]);
 
-  // Atajos de teclado (1-9, J, M, F)
+  // Atajos de teclado (1-9 para opciones, J para diario)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) return;
 
       if (e.key === 'j' || e.key === 'J') {
+        audioManager.playSfx('/audio/PasandoPaginaDeLibro.mp3');
         setIsJournalOpen((prev) => !prev);
         return;
       }
@@ -141,7 +113,7 @@ export default function GameEngine() {
   }, [currentNode, gameState]);
 
   const handleNavigate = (nodeId: string, statePatch?: Partial<GameState>) => {
-    playClickSfx();
+    audioManager.playSfx('/audio/PasandoPaginaDeLibro.mp3', 0.4);
     setGameState((prev) => {
       const updated: GameState = {
         ...prev,
@@ -157,7 +129,7 @@ export default function GameEngine() {
   };
 
   const handleChoice = (choice: Choice) => {
-    playClickSfx();
+    audioManager.playSfx('/audio/PasandoPaginaDeLibro.mp3', 0.4);
     let patch: Partial<GameState> = {};
     if (choice.action) {
       const actionResult = choice.action(gameState);
@@ -180,22 +152,15 @@ export default function GameEngine() {
     const val = inputValue.trim();
     if (!val && !currentNode.inputConfig.defaultValue) return;
 
-    playClickSfx();
+    audioManager.playSfx('/audio/PasandoPaginaDeLibro.mp3', 0.5);
     const finalVal = val || currentNode.inputConfig.defaultValue || '';
     const result = currentNode.inputConfig.onSubmit(finalVal, gameState);
     handleNavigate(result.nextNodeId, result.statePatch);
   };
 
-  const toggleAudio = () => {
-    playClickSfx();
-    setAudioEnabled(!audioEnabled);
-    if (bgAudioRef.current) {
-      if (audioEnabled) {
-        bgAudioRef.current.pause();
-      } else {
-        bgAudioRef.current.play().catch(() => {});
-      }
-    }
+  const toggleMute = () => {
+    const muted = audioManager.toggleMute();
+    setIsMuted(muted);
   };
 
   const toggleFullscreen = () => {
@@ -212,10 +177,8 @@ export default function GameEngine() {
 
   const restartGame = () => {
     if (window.confirm('¿Deseas reiniciar el expediente y volver a la portada?')) {
+      audioManager.stopBgm();
       setGameState(initialGameState);
-      if (bgAudioRef.current) {
-        bgAudioRef.current.pause();
-      }
     }
   };
 
@@ -238,7 +201,20 @@ export default function GameEngine() {
   };
 
   return (
-    <div className="min-h-screen bg-stone-950 text-stone-100 flex flex-col font-parchment select-none antialiased relative">
+    <div className="min-h-screen flex flex-col font-parchment select-none antialiased relative">
+      {/* BANNER INICIAL DE ACTIVACIÓN DE AUDIO */}
+      {showAudioBanner && (
+        <AudioNotificationBanner
+          onAudioActivated={() => {
+            setShowAudioBanner(false);
+            if (currentNode.bgMusic) {
+              audioManager.playBgm(currentNode.bgMusic, true, 0.45);
+            }
+          }}
+          onDismiss={() => setShowAudioBanner(false)}
+        />
+      )}
+
       {/* CUADERNO DE DETECTIVE / RECORDATORIOS (MODAL) */}
       <DetectiveJournal
         isOpen={isJournalOpen}
@@ -253,7 +229,7 @@ export default function GameEngine() {
           onClick={() => setIsInventoryOpen(false)}
         >
           <div
-            className="parchment-box border-2 border-amber-600/70 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4"
+            className="layton-container max-w-md w-full p-6 shadow-2xl space-y-4"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center border-b border-amber-800/40 pb-3">
@@ -262,7 +238,7 @@ export default function GameEngine() {
               </h2>
               <button
                 onClick={() => setIsInventoryOpen(false)}
-                className="w-8 h-8 rounded-full bg-stone-800 hover:bg-stone-700 text-stone-300 border border-stone-600 flex items-center justify-center text-sm font-bold shadow transition"
+                className="w-8 h-8 rounded-full bg-stone-900 hover:bg-stone-800 text-stone-300 border border-stone-700 flex items-center justify-center text-sm font-bold shadow transition"
               >
                 ✕
               </button>
@@ -277,7 +253,7 @@ export default function GameEngine() {
                 {gameState.inventory.map((item) => (
                   <div
                     key={item.id}
-                    className="p-3 bg-stone-900/90 rounded-xl border border-amber-800/50 flex items-start gap-3 shadow-inner hover:border-amber-500/60 transition"
+                    className="p-3 bg-stone-950/80 rounded-xl border border-amber-900/50 flex items-start gap-3 shadow-inner hover:border-amber-600/60 transition"
                   >
                     <span className="text-2xl mt-0.5">{item.icon || '📦'}</span>
                     <div>
@@ -289,9 +265,9 @@ export default function GameEngine() {
               </div>
             )}
 
-            <div className="text-xs text-amber-300/80 border-t border-amber-900/40 pt-3 flex justify-between font-layton items-center">
+            <div className="text-xs text-amber-300/90 border-t border-amber-900/40 pt-3 flex justify-between font-layton items-center">
               <span>Pergaminos recuperados:</span>
-              <span className="font-mono text-amber-400 font-bold bg-amber-950/60 px-2.5 py-0.5 rounded-full border border-amber-600/40">
+              <span className="font-mono text-amber-400 font-bold bg-amber-950/70 px-2.5 py-0.5 rounded-full border border-amber-600/50">
                 {[gameState.parchment1, gameState.parchment2, gameState.parchment3].filter(Boolean).length} / 3
               </span>
             </div>
@@ -299,9 +275,9 @@ export default function GameEngine() {
         </div>
       )}
 
-      {/* HUD SUPERIOR DE LUJO (HEADER) */}
-      <header className="sticky top-0 z-40 bg-stone-950/95 backdrop-blur-md border-b-2 border-amber-700/50 px-3 sm:px-6 py-2.5 flex items-center justify-between shadow-2xl">
-        {/* LOGO E INFORMACIÓN DEL INVESTIGADOR */}
+      {/* BARRA SUPERIOR VINTAGE CON RELIEVE (HUD) */}
+      <header className="sticky top-0 z-40 bg-[#160d09]/95 backdrop-blur-md border-b-2 border-amber-700/60 px-3 sm:px-6 py-2.5 flex items-center justify-between shadow-2xl">
+        {/* LOGO E INFORMACIÓN */}
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-600 via-amber-800 to-stone-950 border-2 border-amber-400/60 flex items-center justify-center text-xl shadow-lg shadow-amber-950/50">
             🎩
@@ -320,15 +296,15 @@ export default function GameEngine() {
           </div>
         </div>
 
-        {/* ACCIONES Y BOTONES DE CONTROL DE ÉLITE */}
+        {/* ACCIONES Y BOTONES TÁCTILES */}
         <div className="flex items-center gap-2 sm:gap-4">
-          {/* BOTÓN RECORDATORIOS / CUADERNO (DESTACADO) */}
+          {/* BOTÓN RECORDATORIOS / CUADERNO (TÁCTIL SKEUOMÓRFICO) */}
           <button
             onClick={() => {
-              playClickSfx();
+              audioManager.playSfx('/audio/PasandoPaginaDeLibro.mp3', 0.4);
               setIsJournalOpen(true);
             }}
-            className="btn-brass px-3.5 py-1.5 rounded-xl text-xs font-layton font-bold text-amber-200 flex items-center gap-2 pulse-gold group shadow-md"
+            className="btn-layton-tactile px-3.5 py-2 rounded-xl text-xs font-layton font-bold text-amber-200 flex items-center gap-2 pulse-gold group shadow-md"
             title="Abrir Cuaderno del Profesor (Atajo: Tecla J)"
           >
             <span className="text-base group-hover:rotate-12 transition-transform">📔</span>
@@ -338,23 +314,23 @@ export default function GameEngine() {
             </span>
           </button>
 
-          {/* CONTADOR DE MONEDAS CON MEDALLÓN */}
-          <div className="flex items-center gap-1.5 bg-gradient-to-r from-stone-900 to-amber-950/60 border border-amber-600/50 px-3 py-1.5 rounded-xl text-xs font-bold text-amber-300 shadow-inner">
+          {/* MONEDAS CON MEDALLÓN DORADO */}
+          <div className="flex items-center gap-1.5 bg-gradient-to-r from-stone-950 to-amber-950/70 border border-amber-600/50 px-3 py-1.5 rounded-xl text-xs font-bold text-amber-300 shadow-inner">
             <span className="w-5 h-5 rounded-full coin-medal flex items-center justify-center text-[10px] font-bold text-stone-950 shadow">
               🪙
             </span>
             <span className="font-mono text-sm font-extrabold">{gameState.money}</span>
-            <span className="hidden sm:inline text-amber-400/70 text-[10px] uppercase tracking-wider font-sans">monedas</span>
+            <span className="hidden sm:inline text-amber-400/80 text-[10px] uppercase tracking-wider font-sans">monedas</span>
           </div>
 
-          {/* MOCHILA / INVENTARIO */}
+          {/* BOTÓN MOCHILA */}
           <button
             onClick={() => {
-              playClickSfx();
+              audioManager.playSfx('/audio/PasandoPaginaDeLibro.mp3', 0.4);
               setIsInventoryOpen(!isInventoryOpen);
             }}
-            className="btn-brass px-2.5 py-1.5 rounded-xl text-xs flex items-center gap-1.5 text-stone-200"
-            title="Abrir mochila de evidencias"
+            className="btn-layton-tactile px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 text-stone-200"
+            title="Abrir cartera de evidencias"
           >
             <span className="text-sm">🎒</span>
             <span className="hidden md:inline font-layton">Mochila</span>
@@ -363,19 +339,19 @@ export default function GameEngine() {
             </span>
           </button>
 
-          {/* CONTROLES AUDIO Y FULLSCREEN */}
-          <div className="flex items-center gap-1 border-l border-amber-900/40 pl-2">
+          {/* CONTROLES DE SONIDO Y PANTALLA */}
+          <div className="flex items-center gap-1 border-l border-amber-900/50 pl-2">
             <button
-              onClick={toggleAudio}
-              className="p-1.5 rounded-lg bg-stone-900 hover:bg-stone-800 text-stone-300 hover:text-amber-300 border border-amber-900/40 transition shadow"
-              title={audioEnabled ? 'Silenciar música y efectos' : 'Activar sonido'}
+              onClick={toggleMute}
+              className="p-2 rounded-xl bg-stone-950/80 hover:bg-stone-900 text-stone-300 hover:text-amber-300 border border-amber-900/40 transition shadow"
+              title={isMuted ? 'Activar sonido' : 'Silenciar sonido'}
             >
-              {audioEnabled ? '🔊' : '🔇'}
+              {isMuted ? '🔇' : '🔊'}
             </button>
 
             <button
               onClick={toggleFullscreen}
-              className="p-1.5 rounded-lg bg-stone-900 hover:bg-stone-800 text-stone-300 hover:text-amber-300 border border-amber-900/40 transition shadow hidden sm:flex items-center justify-center text-xs"
+              className="p-2 rounded-xl bg-stone-950/80 hover:bg-stone-900 text-stone-300 hover:text-amber-300 border border-amber-900/40 transition shadow hidden sm:flex items-center justify-center text-xs"
               title="Pantalla Completa"
             >
               {isFullscreen ? '🗗' : '⛶'}
@@ -383,7 +359,7 @@ export default function GameEngine() {
 
             <button
               onClick={restartGame}
-              className="p-1.5 rounded-lg bg-stone-900 hover:bg-rose-950/60 text-stone-300 hover:text-rose-300 border border-amber-900/40 transition text-xs shadow"
+              className="p-2 rounded-xl bg-stone-950/80 hover:bg-rose-950/60 text-stone-300 hover:text-rose-300 border border-amber-900/40 transition text-xs shadow"
               title="Reiniciar el caso desde la portada"
             >
               🔄
@@ -392,11 +368,11 @@ export default function GameEngine() {
         </div>
       </header>
 
-      {/* CONTENEDOR PRINCIPAL */}
+      {/* CONTENEDOR PRINCIPAL: LA TARJETA DEL CASO */}
       <main className="flex-1 flex flex-col items-center justify-center p-3 sm:p-6 w-full max-w-4xl mx-auto">
-        <div className="w-full parchment-box border-2 border-amber-700/60 rounded-3xl shadow-2xl overflow-hidden backdrop-blur flex flex-col vintage-frame">
-          {/* CINTA DE UBICACIÓN */}
-          <div className="bg-gradient-to-r from-stone-950 via-amber-950/50 to-stone-950 px-5 py-2.5 border-b border-amber-800/40 flex items-center justify-between text-xs font-layton">
+        <div className="w-full layton-container overflow-hidden flex flex-col">
+          {/* CINTA DE UBICACIÓN SUPERIOR */}
+          <div className="bg-gradient-to-r from-stone-950 via-amber-950/60 to-stone-950 px-5 py-2.5 border-b border-amber-800/40 flex items-center justify-between text-xs font-layton">
             <div className="flex items-center gap-2 text-amber-300 font-bold">
               <span>📍</span>
               <span className="tracking-widest uppercase">
@@ -422,7 +398,7 @@ export default function GameEngine() {
             </div>
           ) : (
             <>
-              {/* ESCENARIO VISUAL DE LA ESCENA */}
+              {/* ESCENARIO VISUAL / IMAGEN DE LA ESCENA */}
               <div className="relative w-full aspect-video bg-black flex items-center justify-center overflow-hidden group">
                 {currentNode.image ? (
                   <img
@@ -437,7 +413,7 @@ export default function GameEngine() {
                   </div>
                 )}
 
-                {/* BANNER ELEGANTE INFERIOR CON TÍTULO DE LA ESCENA */}
+                {/* BANNER ELEGANTE CON TÍTULO DE LA ESCENA */}
                 <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-stone-950 via-stone-950/85 to-transparent p-4 sm:p-5 flex items-end justify-between">
                   <h2 className="text-base sm:text-2xl font-extrabold font-layton text-amber-300 drop-shadow-md">
                     {currentNode.title}
@@ -445,7 +421,7 @@ export default function GameEngine() {
                 </div>
               </div>
 
-              {/* DIÁLOGO / NARRATIVA */}
+              {/* DIÁLOGO Y NARRATIVA */}
               <div className="p-4 sm:p-6 space-y-4">
                 {/* SI HAY PERSONAJE HABLANDO (SPEAKER) */}
                 {currentNode.speaker && (
@@ -466,10 +442,10 @@ export default function GameEngine() {
                   </div>
                 )}
 
-                {/* CAJA DE TEXTO NARRATIVO CON EFECTO MÁQUINA DE ESCRIBIR */}
+                {/* CAJA DE TEXTO NARRATIVO CON FONDO PERGAMINO */}
                 <div
                   onClick={handleSkipTyping}
-                  className="bg-stone-950/90 border border-amber-900/60 rounded-2xl p-4 sm:p-5 shadow-inner cursor-pointer relative group transition hover:border-amber-700/60"
+                  className="layton-parchment rounded-2xl p-4 sm:p-5 cursor-pointer relative group transition hover:border-amber-600/60"
                   title="Haz clic para mostrar todo el texto de inmediato"
                 >
                   <p className="text-base sm:text-lg leading-relaxed text-amber-100/90 whitespace-pre-line font-medium font-parchment">
@@ -498,11 +474,11 @@ export default function GameEngine() {
                         onChange={(e) => setInputValue(e.target.value)}
                         placeholder={currentNode.inputConfig.placeholder}
                         autoFocus
-                        className="flex-1 bg-stone-900 border-2 border-amber-600/50 rounded-xl px-4 py-2.5 text-sm sm:text-base text-amber-100 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-amber-400 font-parchment shadow-inner"
+                        className="flex-1 bg-stone-950/80 border-2 border-amber-600/50 rounded-xl px-4 py-2.5 text-sm sm:text-base text-amber-100 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-amber-400 font-parchment shadow-inner"
                       />
                       <button
                         type="submit"
-                        className="btn-brass px-6 py-2.5 rounded-xl font-layton font-extrabold text-xs sm:text-sm text-amber-200 transition flex items-center gap-2 shadow-lg"
+                        className="btn-layton-tactile px-6 py-2.5 rounded-xl font-layton font-extrabold text-xs sm:text-sm text-amber-200 transition flex items-center gap-2 shadow-lg"
                       >
                         <span>Confirmar</span>
                         <span>➔</span>
@@ -511,7 +487,7 @@ export default function GameEngine() {
                   </form>
                 )}
 
-                {/* PARRILLA DE BOTONES DE ACCIONES (ULTRA-PREMIUM) */}
+                {/* PARRILLA DE BOTONES DE ACCIONES (TÁCTILES ESTILO LAYTON) */}
                 {currentNode.choices && currentNode.choices.length > 0 && (
                   <div className="space-y-2.5 pt-2">
                     <div className="text-[11px] font-bold font-layton text-amber-400/90 uppercase tracking-widest px-1 flex items-center gap-2">
@@ -528,7 +504,7 @@ export default function GameEngine() {
                             key={choice.id}
                             disabled={!isAvailable}
                             onClick={() => handleChoice(choice)}
-                            className={`btn-brass p-4 rounded-2xl flex items-start gap-3.5 text-left group ${
+                            className={`btn-layton-tactile p-4 rounded-2xl flex items-start gap-3.5 text-left group ${
                               isAvailable
                                 ? 'cursor-pointer'
                                 : 'opacity-40 cursor-not-allowed filter grayscale'
@@ -565,7 +541,7 @@ export default function GameEngine() {
                               )}
                             </div>
 
-                            {/* FLECHA DE AVANCE SUTIL */}
+                            {/* FLECHA DE AVANCE */}
                             {isAvailable && (
                               <div className="text-amber-500/70 group-hover:text-amber-300 group-hover:translate-x-1 transition-all text-sm mt-0.5">
                                 ➔
