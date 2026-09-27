@@ -35,12 +35,16 @@ export default function GameEngine() {
   // GESTOR DE AUDIO: Transición limpia entre escenas (Fade out anterior -> Fade in nueva)
   useEffect(() => {
     if (currentNode.bgMusic) {
-      audioManager.playBgm(currentNode.bgMusic, true, 0.45);
+      audioManager.playBgm(
+        currentNode.bgMusic,
+        currentNode.id !== 'intro_video',
+        currentNode.id === 'intro_video' ? 0.8 : 0.45
+      );
     } else {
       audioManager.stopBgm();
     }
 
-    if (currentNode.soundEffect) {
+    if (currentNode.soundEffect && currentNode.id !== 'intro_video') {
       audioManager.playSfx(currentNode.soundEffect, 0.65);
     }
   }, [currentNode.id, currentNode.bgMusic, currentNode.soundEffect]);
@@ -208,7 +212,11 @@ export default function GameEngine() {
           onAudioActivated={() => {
             setShowAudioBanner(false);
             if (currentNode.bgMusic) {
-              audioManager.playBgm(currentNode.bgMusic, true, 0.45);
+              audioManager.playBgm(
+                currentNode.bgMusic,
+                currentNode.id !== 'intro_video',
+                currentNode.id === 'intro_video' ? 0.8 : 0.45
+              );
             }
           }}
           onDismiss={() => setShowAudioBanner(false)}

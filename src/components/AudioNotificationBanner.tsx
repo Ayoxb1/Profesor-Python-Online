@@ -14,7 +14,6 @@ export default function AudioNotificationBanner({
 }: AudioNotificationBannerProps) {
   const handleActivate = async () => {
     await audioManager.unlock();
-    audioManager.playSfx('/audio/TiendaCampanas.mp3');
     onAudioActivated();
   };
 

@@ -9,13 +9,28 @@ class AudioManager {
 
   private currentBgm: HTMLAudioElement | null = null;
   private currentBgmSrc: string | null = null;
-  private bgmVolume: number = 0.5;
-  private sfxVolume: number = 0.7;
+  private currentTargetVolume: number = 0.5;
+  private bgmVolume: number = 0.55;
+  private sfxVolume: number = 0.75;
   private isMuted: boolean = false;
   private isUnlocked: boolean = false;
   private fadeInterval: NodeJS.Timeout | null = null;
 
-  private constructor() {}
+  private constructor() {
+    // Si estamos en el navegador, escuchar la primera interacción de usuario
+    if (typeof window !== 'undefined') {
+      const handleFirstInteraction = () => {
+        this.unlock();
+        window.removeEventListener('click', handleFirstInteraction);
+        window.removeEventListener('keydown', handleFirstInteraction);
+        window.removeEventListener('touchstart', handleFirstInteraction);
+      };
+
+      window.addEventListener('click', handleFirstInteraction, { once: true });
+      window.addEventListener('keydown', handleFirstInteraction, { once: true });
+      window.addEventListener('touchstart', handleFirstInteraction, { once: true });
+    }
+  }
 
   public static getInstance(): AudioManager {
     if (!AudioManager.instance) {
@@ -28,14 +43,14 @@ class AudioManager {
    * Desbloquea el audio del navegador tras la primera interacción del usuario.
    */
   public async unlock(): Promise<boolean> {
+    this.isUnlocked = true;
     try {
-      this.isUnlocked = true;
       if (this.currentBgm && !this.isMuted) {
+        this.currentBgm.volume = this.currentTargetVolume || this.bgmVolume;
         await this.currentBgm.play();
       }
       return true;
     } catch (e) {
-      console.warn('[AudioManager] No se pudo desbloquear el audio automáticamente:', e);
       return false;
     }
   }
@@ -51,6 +66,7 @@ class AudioManager {
     if (!src) return;
 
     const normalizedTarget = targetVolume !== undefined ? targetVolume : this.bgmVolume;
+    this.currentTargetVolume = normalizedTarget;
 
     // Si ya está sonando esta misma pista, no reiniciar innecesariamente
     if (this.currentBgm && this.currentBgmSrc === src && !this.currentBgm.paused) {
@@ -67,8 +83,8 @@ class AudioManager {
 
     // Si había una pista sonando, aplicar fade-out gradual
     if (previousAudio && !previousAudio.paused) {
-      const fadeStepTime = 25; // ms entre pasos
-      const totalSteps = 15;   // ~375ms de desvanecimiento
+      const fadeStepTime = 20;
+      const totalSteps = 12;
       const stepDec = previousAudio.volume / totalSteps;
 
       this.fadeInterval = setInterval(() => {
@@ -91,42 +107,32 @@ class AudioManager {
     try {
       const audio = new Audio(src);
       audio.loop = loop;
-      audio.volume = 0; // Comienza en 0 para el fade-in
+      audio.volume = targetVol;
       this.currentBgm = audio;
       this.currentBgmSrc = src;
 
-      if (!this.isMuted && this.isUnlocked) {
-        audio.play().then(() => {
-          this.fadeIn(audio, targetVol);
-        }).catch((err) => {
-          console.warn('[AudioManager] Esperando interacción del usuario para reproducir BGM:', err);
-        });
+      if (!this.isMuted) {
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              this.isUnlocked = true;
+            })
+            .catch(() => {
+              // Navegador bloqueó autoplay; sonará en la primera pulsación gracias a unlock()
+            });
+        }
       }
     } catch (e) {
       console.warn('[AudioManager] Error al instanciar BGM:', e);
     }
   }
 
-  private fadeIn(audio: HTMLAudioElement, targetVol: number): void {
-    const fadeStepTime = 30;
-    const totalSteps = 15;
-    const stepInc = targetVol / totalSteps;
-
-    const interval = setInterval(() => {
-      if (audio.volume + stepInc < targetVol) {
-        audio.volume += stepInc;
-      } else {
-        audio.volume = targetVol;
-        clearInterval(interval);
-      }
-    }, fadeStepTime);
-  }
-
   /**
    * Reproduce un efecto de sonido puntual en un canal aislado sin afectar la música.
    */
   public playSfx(src: string, customVolume?: number): void {
-    if (!src || this.isMuted || !this.isUnlocked) return;
+    if (!src || this.isMuted) return;
 
     try {
       const sfx = new Audio(src);
@@ -173,7 +179,8 @@ class AudioManager {
     if (this.currentBgm) {
       if (muted) {
         this.currentBgm.pause();
-      } else if (this.isUnlocked) {
+      } else {
+        this.currentBgm.volume = this.currentTargetVolume || this.bgmVolume;
         this.currentBgm.play().catch(() => {});
       }
     }
@@ -190,6 +197,7 @@ class AudioManager {
 
   public setBgmVolume(volume: number): void {
     this.bgmVolume = Math.min(1, Math.max(0, volume));
+    this.currentTargetVolume = this.bgmVolume;
     if (this.currentBgm) {
       this.currentBgm.volume = this.bgmVolume;
     }
