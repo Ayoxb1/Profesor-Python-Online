@@ -580,7 +580,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
     description:
       'Grabada en la placa de bronce sobre el dial se lee la siguiente sucesión numérica:\n\n« 1,  1,  2,  3,  5,  8,  13,  ? »\n\n¿Qué número completa la célebre secuencia del sabio italiano para desbloquear los cerrojos?',
     image: '/images/Acertijo/Despensa chino caja feurte.png',
-    soundEffect: '/audio/Acertijo.mp3',
+    bgMusic: '/audio/BazarHablando.mp3',
     type: 'input',
     inputConfig: {
       label: 'Introduce la clave numérica:',
@@ -612,6 +612,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
     location: 'Caja Fuerte',
     description: 'Un chasquido seco reverbera en el mecanismo. Las ruedas dentadas giran en vacío y los pestillos no ceden. Recuerda: cada término es la suma de los dos anteriores...',
     image: '/images/Acertijo/Despensa chino caja feurte.png',
+    bgMusic: '/audio/BazarHablando.mp3',
     choices: [
       {
         id: 'reintentar_fibo',
@@ -632,7 +633,8 @@ export const STORY_NODES: Record<string, StoryNode> = {
     location: 'Interior de la Caja Fuerte',
     description: '¡Los engranajes se alinean a la perfección! La pesada puerta de acero se abre suavemente revelando 20 monedas de plata maciza y el Primer Pergamino Sagrado de la Ciudadela.',
     image: '/images/Acertijo/cofre_abierto.png',
-    soundEffect: '/audio/AudioVictoria.mp3',
+    soundEffect: '/audio/Fantasia.mp3',
+    bgMusic: '/audio/BazarHablando.mp3',
     choices: [
       {
         id: 'coger_recompensa',
