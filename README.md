@@ -2,112 +2,150 @@
 
 # 🕵️‍♂️ El Profesor Python y El Misterio de la Alcantarilla
 
-### *Trabajo de Fin de 1º Grado de Desarrollo de Aplicaciones*
+### *Aventura Gráfica Detectivesca e Interactiva — Proyecto 1º Grado DAM*
 
-[![Java](https://img.shields.io/badge/Java-17%20%7C%2021-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://www.java.com/)
-[![WebAssembly](https://img.shields.io/badge/WebAssembly-CheerpJ%203-654FF0?style=for-the-badge&logo=webassembly&logoColor=white)](https://cheerpj.com/)
-[![Vercel](https://img.shields.io/badge/Vercel-Ready-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
-[![Platform](https://img.shields.io/badge/Platform-Web%20Browser%20%26%20Desktop-38bdf8?style=for-the-badge)](./index.html)
+[![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-18-61dafb?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38bdf8?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Java](https://img.shields.io/badge/Java%20Source-Swing%20%7C%20AWT-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://github.com/Ayoxb1/Aventura-Grafica-Profesor-Python)
+[![Vercel](https://img.shields.io/badge/Vercel-Deployed-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
 
-Una aventura gráfica detectivesca desarrollada en **Java (Swing / AWT)** y portada a la web mediante **CheerpJ 3 (WebAssembly JVM)** para que cualquier usuario pueda jugarla directamente desde su navegador sin tener que instalar Java ni configurar dependencias.
+---
 
-[🎮 **¡Jugar Online (Visor Web)!**](./index.html) · [📖 Ver Sinopsis](#-sinopsis-y-trama) · [👥 Autores](#-autores) · [🚀 Despliegue](#-despliegue-en-vercel)
+### 🔗 Enlaces Destacados del Proyecto
+
+[![Google Slides](https://img.shields.io/badge/📊_Presentación_del_Proyecto-Google_Slides-E37400?style=for-the-badge&logo=googleslides&logoColor=white)](https://docs.google.com/presentation/d/1KkS6pUo7uKIwQFdt-uiUk2OvdrBb7-lsdlU-fXbOa-Q/edit?usp=sharing)
+[![Java Repo](https://img.shields.io/badge/☕_Código_Fuente_Java_Original-GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Ayoxb1/Aventura-Grafica-Profesor-Python)
+
+**[📊 Ver Presentación de Diapositivas](https://docs.google.com/presentation/d/1KkS6pUo7uKIwQFdt-uiUk2OvdrBb7-lsdlU-fXbOa-Q/edit?usp=sharing)** &nbsp;•&nbsp; **[☕ Repositorio Java Swing Original](https://github.com/Ayoxb1/Aventura-Grafica-Profesor-Python)**
 
 </div>
 
 ---
 
-## 👥 Autores
+## 👥 Autores y Créditos
 
-Proyecto conceptualizado, programado y diseñado por:
+Proyecto desarrollado por:
 
-- **Pablo Jiménez Jorquera** ([@pablo](https://github.com/Ayoxb1))
+- **Pablo Jiménez Jorquera**
 - **Ayoub Atidi Belbaz** ([@Ayoxb1](https://github.com/Ayoxb1))
 
 ---
 
-## 🎮 Jugar Online (HTML / Web View)
+## 📌 Recursos y Enlaces Clave
 
-El juego está optimizado para ejecutarse en el navegador con aceleración WebAssembly y sonido integrado:
+1. 📊 **Presentación Oficial del Proyecto:**  
+   [Presentación en Google Slides](https://docs.google.com/presentation/d/1KkS6pUo7uKIwQFdt-uiUk2OvdrBb7-lsdlU-fXbOa-Q/edit?usp=sharing)  
+   *Diapositivas detalladas con el diseño, justificación técnica, diagramas de flujo y arquitectura del caso.*
 
-- 🌐 **Visor HTML local / GitHub:** Puedes abrir directamente el archivo [`index.html`](./index.html) en tu servidor web.
-- ⚡ **Despliegue en Vercel:** Listo para desplegar en 1 clic gracias al archivo `vercel.json` configurado con encabezados de aislamiento `Cross-Origin-Opener-Policy` y `Cross-Origin-Embedder-Policy`.
-
----
-
-## 📖 Sinopsis y Trama
-
-En una tranquila ciudad metropolitana, lo inesperado sacude la rutina. Dos jóvenes con una curiosidad insaciable y un instinto detectivesco encuentran en el suelo un misterioso pergamino con jeroglíficos crípticos.
-
-Lo que parecía un enigma inocente se convierte en una peligrosa trama que conecta las profundidades del subsuelo urbano con enigmas matemáticos, secretos en la biblioteca antigua y sospechosas actividades en la central.
-
-### 🗺️ Lugares a explorar:
-- **La Plaza Central:** El corazón de la investigación y punto de inicio del misterio.
-- **La Alameda Aullante:** Caminos ocultos, bifurcaciones y pistas escondidas tras la naturaleza.
-- **El Barrio Antiguo y la Librería:** Consulta de jeroglíficos y diálogos con sabios locales.
-- **La Central Nuclear y la Estación Central:** Zonas vigiladas de alto riesgo.
-- **El Mercado Mayorista y el Bazar:** Encuentros con comerciantes y resolución de acertijos de compra/intercambio.
-- **Las Profundidades de la Alcantarilla:** El clímax subterráneo del misterio.
+2. ☕ **Repositorio del Código Original en Java:**  
+   [Ayoxb1/Aventura-Grafica-Profesor-Python](https://github.com/Ayoxb1/Aventura-Grafica-Profesor-Python)  
+   *Implementación original en Java con interfaz gráfica Swing/AWT, sistema de ventanas modulares, hilos de ejecución y reproductor Jaco MP3.*
 
 ---
 
-## 🧩 Acertijos y Mecánicas
+## 🎩 Sobre el Videojuego
 
-- **Diálogos con toma de decisiones:** Conversaciones con personajes clave que alteran el progreso y desbloquean nuevas zonas.
-- **Acertijo del Río en el Bosque:** Clásico problema de optimización lógica donde los personajes deben cruzar el río antes de que se agote el tiempo.
-- **Sucesión de Fibonacci y Criptografía:** Descifrado de claves numéricas para abrir cajas fuertes y avanzar en la historia.
-- **Banda Sonora y Efectos Ambientales:** Pistas musicales y sonidos que reaccionan a cada escena mediante el reproductor MP3 integrado.
+**"El Profesor Python y El Misterio de la Alcantarilla"** es una aventura gráfica de deducción, misterio y acertijos lógicos ambientada en una atmósfera detectivesca clásica con una dirección de arte fuertemente inspirada en la aclamada saga de **El Profesor Layton**.
+
+En una apacible y señorial ciudad, envuelta en la niebla del atardecer, dos jóvenes investigadores encuentran un enigmático pergamino con símbolos arcanos. Lo que parecía un acertijo inofensivo desata una conspiración que conecta las calles adoquinadas, la vieja biblioteca y el bazar con los oscuros secretos que fluyen por los canales del alcantarillado.
 
 ---
 
-## 🛠️ Tecnologías y Arquitectura
+## ✨ Características Principales
 
-| Componente | Tecnología | Descripción |
+- 🎨 **Estética Visual Estilo "Profesor Layton":**
+  - Paleta clásica de marrones caoba, dorados envejecidos (*antique brass*), texturas de pergamino y piel.
+  - Tipografías de alta elegancia: **Cinzel** para títulos dorados con relieve y **EB Garamond** para textos narrativos.
+  - Botones táctiles interactivos con efecto de brillo (*shimmer*), relieve 3D y respuesta mecánica de pulsación.
+  - Medallón de monedas doradas y cartera de inventario.
+
+- 📔 **Cuaderno del Profesor (Sistema de Recordatorios y Pistas):**
+  - Diario de detective encuadernado en cuero accesible en cualquier instante (botón o tecla `J`).
+  - Seguimiento del objetivo en curso, registro de pergaminos descubiertos, perfiles de personajes interrogados y pistas deductivas.
+
+- 🧩 **Minijuego Lógico del Río en Tiempo Real:**
+  - Recreación fiel del enigma de optimización del cruce de río: 4 personajes con diferentes velocidades (1, 2, 5 y 10 minutos), una balsa con capacidad para dos personas y una antorcha que se apaga en 17 minutos.
+  - Animaciones de cruce, control de tiempo restante y gestión de linterna.
+
+- 🎵 **Motor de Sonido Centralizado con Corte Limpio:**
+  - Pistas musicales ambientales y efectos de sonido reactivos a cada escena.
+  - Sin solapes sonoros: las transiciones entre nodos y pistas cortan instantáneamente el audio anterior.
+  - Notificación de bienvenida elegante para desbloquear el audio en navegadores modernos.
+
+- 🎞️ **Cinemática de Apertura en Máxima Resolución:**
+  - GIF original de apertura en alta fidelidad y sonido introductorio sincronizado.
+
+---
+
+## 🛠️ Stack Tecnológico
+
+| Módulo | Tecnología | Uso |
 | :--- | :--- | :--- |
-| **Lenguaje Base** | Java (JDK 17 / 21) | Lógica orientada a objetos, control de flujo y eventos. |
-| **Interfaz Gráfica** | Java Swing & AWT | Ventanas modulares (`modulos.FuncionesGraficas`), diálogos y paneles interactivos. |
-| **Motor de Audio** | Jaco MP3 Player | Decodificación y reproducción de pistas `.mp3` y `.wav` en bucle continuo. |
-| **Virtualización Web** | CheerpJ 3 (WebAssembly) | Compilador JIT de bytecode Java a WebAssembly ejecutado en el navegador del cliente. |
-| **Frontend Web** | HTML5 / CSS3 Moderno | Contenedor gamer centrado, pantalla de carga fluida y modo pantalla completa. |
-| **Hosting Cloud** | Vercel / Netlify | CDN global con cabeceras `COOP` y `COEP` para soporte de multihilo en WebAssembly. |
+| **Framework Web** | Next.js 14 (App Router) | Renderizado óptimo, routing dinámico y rendimiento estático |
+| **Biblioteca UI** | React 18 & TypeScript | Componentes interactivos modulares y tipado seguro |
+| **Estilos y Efectos** | Tailwind CSS 3.4 | Sistema de diseño de estilo victoriano / skeuomórfico |
+| **Tipografía** | Google Fonts (Cinzel, EB Garamond) | Acabado editorial Layton |
+| **Gestión de Audio** | Web Audio API / HTML5 Audio | Control de canales BGM y SFX con prevención de colisiones |
+| **Código Java Original** | Java 17/21 (Swing / AWT) | Versión original de escritorio del proyecto |
 
 ---
 
-## 📁 Estructura del Proyecto
+## 🚀 Ejecución en Local
+
+Para probar la versión web en tu máquina local:
+
+```bash
+# 1. Clonar el repositorio
+git clone git@github.com:Ayoxb1/Profesor-Python-Online.git
+cd Profesor-Python-Online
+
+# 2. Instalar dependencias
+npm install
+
+# 3. Iniciar el servidor de desarrollo
+npm run dev
+```
+
+Abre [http://localhost:3000](http://localhost:3000) en tu navegador para comenzar la investigación.
+
+---
+
+## 📦 Estructura del Repositorio
 
 ```text
 Profesor-Python-Online/
-├── index.html                  # Visor Web con CheerpJ 3 y canvas responsive
-├── vercel.json                 # Cabeceras de seguridad requeridas por WebAssembly
-├── pom.xml                     # Descriptor Maven de dependencias
-├── README.md                   # Documentación completa y créditos
-├── juego.jar                   # Fat JAR ejecutable (Java 17)
-└── src/
-    └── main/
-        └── java/
-            ├── com/mycompany/aventuragrafica/
-            │   ├── Aventuragrafica.java      # Clase principal y flujo de la historia
-            │   ├── AcertijoRioBosque.java    # Módulo del acertijo del río
-            │   └── Reproductor.java          # Módulo del reproductor de sonido
-            └── resources/
-                ├── Imagenes/                 # Fondos, personajes y jeroglíficos
-                └── Sonidos/                  # Efectos y bandas sonoras MP3/WAV
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx                # Metadata, viewport y fuentes Cinzel / EB Garamond
+│   │   ├── page.tsx                  # Página principal que orquesta el motor de juego
+│   │   └── globals.css               # Estilos del sistema de diseño (parchment, borders, brass)
+│   ├── components/
+│   │   ├── GameEngine.tsx            # Bucle central, HUD, máquina de escribir y decisiones
+│   │   ├── DetectiveJournal.tsx      # Cuaderno encuadernado de notas, objetivos y pistas
+│   │   ├── RiverPuzzle.tsx           # Minijuego interactivo del cruce del río
+│   │   └── AudioNotificationBanner.tsx # Aviso elegante de activación de sonido
+│   ├── data/
+│   │   └── storyNodes.ts             # Grafo completo de nodos narrativos y acertijos
+│   ├── types/
+│   │   └── game.ts                   # Interfaces TypeScript (GameState, StoryNode, Item)
+│   ├── utils/
+│   │   └── audioManager.ts           # Gestor de canales de audio sin solapamiento
+│   └── main/java/                    # Código fuente Java Swing original y recursos
+├── public/
+│   ├── audio/                        # Archivos de música y efectos de sonido MP3/WAV
+│   └── images/                       # Escenarios, personajes, pergaminos e intro GIF
+├── vercel.json                       # Configuración de despliegue para Vercel
+├── package.json                      # Scripts y dependencias del proyecto
+└── README.md                         # Documentación del proyecto
 ```
-
----
-
-## 🚀 Despliegue en Vercel
-
-1. Entra a [Vercel](https://vercel.com/) e inicia sesión con tu cuenta de GitHub.
-2. Pulsa en **Add New Project** y selecciona el repositorio **`Profesor-Python-Online`**.
-3. Deja la configuración en **Other** (sitio estático). Vercel leerá automáticamente `vercel.json` y servirá `index.html` con todos sus recursos.
-4. Pulsa **Deploy** y comparte el enlace público para jugar.
 
 ---
 
 <div align="center">
 
-Hecho con dedicación por **Pablo Jiménez Jorquera** y **Ayoub Atidi Belbaz** 🎓  
-*Aventura Gráfica - Profesor Python*
+Desarrollado con pasión por **Pablo Jiménez Jorquera** y **Ayoub Atidi Belbaz** 🎓  
+*Aventura Gráfica - El Profesor Python*
 
 </div>
