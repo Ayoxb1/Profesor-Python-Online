@@ -5,6 +5,14 @@ export interface InventoryItem {
   icon?: string;
 }
 
+export interface ClueItem {
+  id: string;
+  title: string;
+  description: string;
+  discoveredAt: string;
+  category: 'alcantarilla' | 'pergamino' | 'testimonio' | 'objeto';
+}
+
 export interface GameState {
   playerName: string;
   femaleName: string;
@@ -16,6 +24,7 @@ export interface GameState {
   talkedToOldMan: boolean;
   sneakedBack: boolean;
   sneakedStore: boolean;
+  solvedRiver: boolean;
   inventory: InventoryItem[];
   currentNodeId: string;
   visitedNodes: string[];
@@ -31,11 +40,17 @@ export interface Choice {
   disabledReason?: string;
 }
 
-export type SceneType = 'standard' | 'input' | 'cutscene' | 'riddle';
+export type SceneType = 'standard' | 'input' | 'cutscene' | 'riddle' | 'river_puzzle';
 
 export interface StoryNode {
   id: string;
   title: string;
+  location?: string;
+  speaker?: {
+    name: string;
+    avatar?: string;
+    role?: string;
+  };
   description: string | ((state: GameState) => string);
   image?: string;
   bgMusic?: string;     // URL o ruta dentro de /audio/...
