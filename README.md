@@ -15,11 +15,11 @@
 
 ### 🔗 Enlaces Destacados del Proyecto
 
-[![Jugar Online](https://img.shields.io/badge/🎮_JUGAR_ONLINE-Vercel_App-0070F3?style=for-the-badge&logo=vercel&logoColor=white)](https://repo-teal-three.vercel.app)
+[![Jugar Online](https://img.shields.io/badge/🎮_JUGAR_ONLINE-Profesor--Python-0070F3?style=for-the-badge&logo=vercel&logoColor=white)](https://profesor-python.vercel.app)
 [![Google Slides](https://img.shields.io/badge/📊_Presentación_del_Proyecto-Google_Slides-E37400?style=for-the-badge&logo=googleslides&logoColor=white)](https://docs.google.com/presentation/d/1KkS6pUo7uKIwQFdt-uiUk2OvdrBb7-lsdlU-fXbOa-Q/edit?usp=sharing)
 [![Java Repo](https://img.shields.io/badge/☕_Código_Fuente_Java_Original-GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Ayoxb1/Aventura-Grafica-Profesor-Python)
 
-**[🎮 ¡Jugar Online Ahora!](https://repo-teal-three.vercel.app)** &nbsp;•&nbsp; **[📊 Ver Presentación de Diapositivas](https://docs.google.com/presentation/d/1KkS6pUo7uKIwQFdt-uiUk2OvdrBb7-lsdlU-fXbOa-Q/edit?usp=sharing)** &nbsp;•&nbsp; **[☕ Repositorio Java Swing Original](https://github.com/Ayoxb1/Aventura-Grafica-Profesor-Python)**
+**[🎮 ¡Jugar Online en profesor-python.vercel.app!](https://profesor-python.vercel.app)** &nbsp;•&nbsp; **[📊 Ver Presentación de Diapositivas](https://docs.google.com/presentation/d/1KkS6pUo7uKIwQFdt-uiUk2OvdrBb7-lsdlU-fXbOa-Q/edit?usp=sharing)** &nbsp;•&nbsp; **[☕ Repositorio Java Swing Original](https://github.com/Ayoxb1/Aventura-Grafica-Profesor-Python)**
 
 </div>
 

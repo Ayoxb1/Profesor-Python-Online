@@ -122,42 +122,42 @@ export default function DetectiveJournal({ isOpen, onClose, gameState }: Detecti
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 md:p-6 animate-in fade-in duration-200"
       onClick={onClose}
     >
       <div
-        className="parchment-box border-2 border-amber-600/60 rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden text-amber-100"
+        className="parchment-box border-2 border-amber-600/60 rounded-xl sm:rounded-2xl max-w-2xl w-full max-h-[94vh] sm:max-h-[90vh] flex flex-col shadow-2xl overflow-hidden text-amber-100"
         onClick={(e) => e.stopPropagation()}
       >
         {/* CABECERA VINTAGE DEL CUADERNO */}
-        <div className="bg-gradient-to-r from-amber-950 via-stone-900 to-amber-950 px-5 py-4 border-b border-amber-700/50 flex items-center justify-between shadow-md">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl drop-shadow">📔</span>
-            <div>
-              <h2 className="text-lg font-bold font-layton text-amber-300 tracking-wider">
+        <div className="bg-gradient-to-r from-amber-950 via-stone-900 to-amber-950 px-3.5 sm:px-5 py-3 sm:py-4 border-b border-amber-700/50 flex items-center justify-between shadow-md">
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+            <span className="text-xl sm:text-2xl drop-shadow flex-shrink-0">📔</span>
+            <div className="min-w-0">
+              <h2 className="text-sm sm:text-lg font-bold font-layton text-amber-300 tracking-wide sm:tracking-wider truncate">
                 Cuaderno del Profesor Python
               </h2>
-              <p className="text-xs text-amber-200/70 font-parchment italic">
+              <p className="text-[10px] sm:text-xs text-amber-200/70 font-parchment italic truncate">
                 Anotaciones, deducciones y estado del caso
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-stone-800 hover:bg-amber-900/60 text-amber-300 border border-amber-600/40 flex items-center justify-center text-sm font-bold transition shadow"
+            className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-stone-800 hover:bg-amber-900/60 text-amber-300 border border-amber-600/40 flex items-center justify-center text-xs sm:text-sm font-bold transition shadow flex-shrink-0"
             title="Cerrar Cuaderno"
           >
             ✕
           </button>
         </div>
 
-        {/* NAVEGACIÓN POR PESTAÑAS */}
-        <div className="bg-stone-950/80 px-4 py-2 border-b border-amber-900/40 flex gap-2 overflow-x-auto text-xs font-layton">
+        {/* NAVEGACIÓN POR PESTAÑAS RESPONSIVE */}
+        <div className="bg-stone-950/80 px-2 sm:px-4 py-2 border-b border-amber-900/40 flex gap-1.5 sm:gap-2 overflow-x-auto text-[11px] sm:text-xs font-layton">
           <button
             onClick={() => setActiveTab('objetivos')}
-            className={`px-3 py-1.5 rounded-lg border transition flex items-center gap-1.5 whitespace-nowrap ${
+            className={`px-2.5 sm:px-3 py-1.5 rounded-lg border transition flex items-center gap-1 sm:gap-1.5 whitespace-nowrap flex-shrink-0 ${
               activeTab === 'objetivos'
-                ? 'bg-amber-700/40 text-amber-200 border-amber-500 shadow-inner'
+                ? 'bg-amber-700/40 text-amber-200 border-amber-500 shadow-inner font-bold'
                 : 'bg-stone-900/60 text-stone-400 border-transparent hover:text-amber-200'
             }`}
           >

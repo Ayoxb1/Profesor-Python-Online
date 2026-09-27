@@ -273,52 +273,52 @@ export default function GameEngine() {
         </div>
       )}
 
-      {/* BARRA SUPERIOR VINTAGE CON RELIEVE (HUD) */}
-      <header className="sticky top-0 z-40 bg-[#160d09]/95 backdrop-blur-md border-b-2 border-amber-700/60 px-3 sm:px-6 py-2.5 flex items-center justify-between shadow-2xl">
+      {/* BARRA SUPERIOR VINTAGE CON RELIEVE (HUD RESPONSIVE) */}
+      <header className="sticky top-0 z-40 bg-[#160d09]/95 backdrop-blur-md border-b-2 border-amber-700/60 px-2 sm:px-4 md:px-6 py-2 sm:py-2.5 flex items-center justify-between shadow-2xl safe-top">
         {/* LOGO E INFORMACIÓN */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-600 via-amber-800 to-stone-950 border-2 border-amber-400/60 flex items-center justify-center text-xl shadow-lg shadow-amber-950/50">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-amber-600 via-amber-800 to-stone-950 border border-amber-400/60 sm:border-2 flex items-center justify-center text-base sm:text-xl shadow-lg shadow-amber-950/50 flex-shrink-0">
             🎩
           </div>
-          <div>
-            <div className="flex items-center gap-1.5">
-              <h1 className="text-sm sm:text-base font-extrabold font-layton text-amber-300 tracking-wider">
+          <div className="min-w-0">
+            <div className="flex items-center gap-1">
+              <h1 className="text-xs sm:text-sm md:text-base font-extrabold font-layton text-amber-300 tracking-wider truncate">
                 Profesor Python
               </h1>
-              <span className="hidden sm:inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="En línea" />
+              <span className="hidden md:inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" title="En línea" />
             </div>
-            <p className="text-xs text-stone-400 font-parchment truncate max-w-[130px] sm:max-w-xs flex items-center gap-1">
-              <span>Detective:</span>
-              <strong className="text-amber-200">{gameState.playerName || 'Investigador'}</strong>
+            <p className="text-[10px] sm:text-xs text-stone-400 font-parchment truncate max-w-[100px] sm:max-w-[160px] md:max-w-xs flex items-center gap-1">
+              <span className="hidden xs:inline">Det:</span>
+              <strong className="text-amber-200 truncate">{gameState.playerName || 'Investigador'}</strong>
             </p>
           </div>
         </div>
 
         {/* ACCIONES Y BOTONES TÁCTILES */}
-        <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex items-center gap-1.5 sm:gap-2.5 md:gap-4 flex-shrink-0">
           {/* BOTÓN RECORDATORIOS / CUADERNO (TÁCTIL SKEUOMÓRFICO) */}
           <button
             onClick={() => {
               audioManager.playUiClick();
               setIsJournalOpen(true);
             }}
-            className="btn-layton-tactile px-3.5 py-2 rounded-xl text-xs font-layton font-bold text-amber-200 flex items-center gap-2 pulse-gold group shadow-md"
+            className="btn-layton-tactile px-2 sm:px-3.5 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-layton font-bold text-amber-200 flex items-center gap-1.5 sm:gap-2 pulse-gold group shadow-md"
             title="Abrir Cuaderno del Profesor (Atajo: Tecla J)"
           >
-            <span className="text-base group-hover:rotate-12 transition-transform">📔</span>
+            <span className="text-sm sm:text-base group-hover:rotate-12 transition-transform">📔</span>
             <span className="hidden sm:inline">Recordatorios</span>
-            <span className="bg-amber-500 text-stone-950 text-[10px] px-1.5 py-0.2 rounded-full font-sans font-black shadow">
+            <span className="bg-amber-500 text-stone-950 text-[9px] sm:text-[10px] px-1 sm:px-1.5 py-0.2 rounded-full font-sans font-black shadow">
               Pistas
             </span>
           </button>
 
           {/* MONEDAS CON MEDALLÓN DORADO */}
-          <div className="flex items-center gap-1.5 bg-gradient-to-r from-stone-950 to-amber-950/70 border border-amber-600/50 px-3 py-1.5 rounded-xl text-xs font-bold text-amber-300 shadow-inner">
-            <span className="w-5 h-5 rounded-full coin-medal flex items-center justify-center text-[10px] font-bold text-stone-950 shadow">
+          <div className="flex items-center gap-1 sm:gap-1.5 bg-gradient-to-r from-stone-950 to-amber-950/70 border border-amber-600/50 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-bold text-amber-300 shadow-inner">
+            <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full coin-medal flex items-center justify-center text-[9px] sm:text-[10px] font-bold text-stone-950 shadow flex-shrink-0">
               🪙
             </span>
-            <span className="font-mono text-sm font-extrabold">{gameState.money}</span>
-            <span className="hidden sm:inline text-amber-400/80 text-[10px] uppercase tracking-wider font-sans">monedas</span>
+            <span className="font-mono text-xs sm:text-sm font-extrabold">{gameState.money}</span>
+            <span className="hidden lg:inline text-amber-400/80 text-[10px] uppercase tracking-wider font-sans">monedas</span>
           </div>
 
           {/* BOTÓN MOCHILA */}
@@ -327,21 +327,21 @@ export default function GameEngine() {
               audioManager.playUiClick();
               setIsInventoryOpen(!isInventoryOpen);
             }}
-            className="btn-layton-tactile px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 text-stone-200"
+            className="btn-layton-tactile px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-[11px] sm:text-xs flex items-center gap-1 sm:gap-1.5 text-stone-200"
             title="Abrir cartera de evidencias"
           >
-            <span className="text-sm">🎒</span>
+            <span className="text-xs sm:text-sm">🎒</span>
             <span className="hidden md:inline font-layton">Mochila</span>
-            <span className="bg-amber-950/80 text-amber-300 text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold border border-amber-700/50">
+            <span className="bg-amber-950/80 text-amber-300 text-[9px] sm:text-[10px] px-1 sm:px-1.5 py-0.2 rounded-full font-mono font-bold border border-amber-700/50">
               {gameState.inventory.length}
             </span>
           </button>
 
           {/* CONTROLES DE SONIDO Y PANTALLA */}
-          <div className="flex items-center gap-1 border-l border-amber-900/50 pl-2">
+          <div className="flex items-center gap-1 border-l border-amber-900/50 pl-1 sm:pl-2">
             <button
               onClick={toggleMute}
-              className="p-2 rounded-xl bg-stone-950/80 hover:bg-stone-900 text-stone-300 hover:text-amber-300 border border-amber-900/40 transition shadow"
+              className="p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-stone-950/80 hover:bg-stone-900 text-stone-300 hover:text-amber-300 border border-amber-900/40 transition shadow text-xs sm:text-sm"
               title={isMuted ? 'Activar sonido' : 'Silenciar sonido'}
             >
               {isMuted ? '🔇' : '🔊'}
@@ -349,7 +349,7 @@ export default function GameEngine() {
 
             <button
               onClick={toggleFullscreen}
-              className="p-2 rounded-xl bg-stone-950/80 hover:bg-stone-900 text-stone-300 hover:text-amber-300 border border-amber-900/40 transition shadow hidden sm:flex items-center justify-center text-xs"
+              className="p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-stone-950/80 hover:bg-stone-900 text-stone-300 hover:text-amber-300 border border-amber-900/40 transition shadow hidden md:flex items-center justify-center text-xs"
               title="Pantalla Completa"
             >
               {isFullscreen ? '🗗' : '⛶'}
@@ -357,7 +357,7 @@ export default function GameEngine() {
 
             <button
               onClick={restartGame}
-              className="p-2 rounded-xl bg-stone-950/80 hover:bg-rose-950/60 text-stone-300 hover:text-rose-300 border border-amber-900/40 transition text-xs shadow"
+              className="p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-stone-950/80 hover:bg-rose-950/60 text-stone-300 hover:text-rose-300 border border-amber-900/40 transition text-xs shadow"
               title="Reiniciar el caso desde la portada"
             >
               🔄
@@ -366,20 +366,20 @@ export default function GameEngine() {
         </div>
       </header>
 
-      {/* CONTENEDOR PRINCIPAL: LA TARJETA DEL CASO */}
-      <main className="flex-1 flex flex-col items-center justify-center p-3 sm:p-6 w-full max-w-4xl mx-auto">
-        <div className="w-full layton-container overflow-hidden flex flex-col">
+      {/* CONTENEDOR PRINCIPAL: LA TARJETA DEL CASO (TOTALMENTE RESPONSIVE) */}
+      <main className="flex-1 flex flex-col items-center justify-center p-2 sm:p-4 md:p-6 w-full max-w-4xl mx-auto">
+        <div className="w-full layton-container overflow-hidden flex flex-col shadow-2xl">
           {/* CINTA DE UBICACIÓN SUPERIOR */}
-          <div className="bg-gradient-to-r from-stone-950 via-amber-950/60 to-stone-950 px-5 py-2.5 border-b border-amber-800/40 flex items-center justify-between text-xs font-layton">
-            <div className="flex items-center gap-2 text-amber-300 font-bold">
-              <span>📍</span>
-              <span className="tracking-widest uppercase">
+          <div className="bg-gradient-to-r from-stone-950 via-amber-950/60 to-stone-950 px-3 sm:px-5 py-2 sm:py-2.5 border-b border-amber-800/40 flex items-center justify-between text-[11px] sm:text-xs font-layton">
+            <div className="flex items-center gap-1.5 sm:gap-2 text-amber-300 font-bold truncate">
+              <span className="flex-shrink-0">📍</span>
+              <span className="tracking-wider sm:tracking-widest uppercase truncate">
                 {currentNode.location || 'Distrito de la Ciudad'}
               </span>
             </div>
 
             {currentNode.type === 'river_puzzle' && (
-              <span className="bg-sky-950 text-sky-300 border border-sky-500/50 px-2.5 py-0.5 rounded-full text-[10px] font-sans font-bold shadow-sm animate-pulse">
+              <span className="bg-sky-950 text-sky-300 border border-sky-500/50 px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-sans font-bold shadow-sm animate-pulse flex-shrink-0">
                 🧩 Minijuego en curso
               </span>
             )}
@@ -387,7 +387,7 @@ export default function GameEngine() {
 
           {/* VISTA SEGÚN TIPO DE NODO: MINIJUEGO DEL RÍO O ESCENA ESTÁNDAR */}
           {currentNode.type === 'river_puzzle' ? (
-            <div className="p-4 sm:p-6">
+            <div className="p-3 sm:p-6">
               <RiverPuzzle
                 gameState={gameState}
                 onSuccess={handleRiverSolved}
@@ -396,8 +396,8 @@ export default function GameEngine() {
             </div>
           ) : (
             <>
-              {/* ESCENARIO VISUAL / IMAGEN DE LA ESCENA */}
-              <div className="relative w-full aspect-video bg-black flex items-center justify-center overflow-hidden group">
+              {/* ESCENARIO VISUAL / IMAGEN DE LA ESCENA (RESPONSIVE RATIO & MAX-HEIGHT) */}
+              <div className="relative w-full aspect-[16/10] sm:aspect-video max-h-[36vh] sm:max-h-[46vh] md:max-h-[52vh] bg-black flex items-center justify-center overflow-hidden group">
                 {currentNode.image ? (
                   <img
                     src={currentNode.image}
@@ -406,21 +406,21 @@ export default function GameEngine() {
                   />
                 ) : (
                   <div className="flex flex-col items-center justify-center text-stone-600 space-y-2">
-                    <span className="text-5xl">🏛️</span>
+                    <span className="text-4xl sm:text-5xl">🏛️</span>
                     <span className="text-xs font-layton">Ciudad de las Sombras</span>
                   </div>
                 )}
 
                 {/* BANNER ELEGANTE CON TÍTULO DE LA ESCENA */}
-                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-stone-950 via-stone-950/85 to-transparent p-4 sm:p-5 flex items-end justify-between">
-                  <h2 className="text-base sm:text-2xl font-extrabold font-layton text-amber-300 drop-shadow-md">
+                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-stone-950 via-stone-950/85 to-transparent p-3 sm:p-5 flex items-end justify-between">
+                  <h2 className="text-sm sm:text-xl md:text-2xl font-extrabold font-layton text-amber-300 drop-shadow-md leading-tight">
                     {currentNode.title}
                   </h2>
                 </div>
               </div>
 
               {/* DIÁLOGO Y NARRATIVA */}
-              <div className="p-4 sm:p-6 space-y-4">
+              <div className="p-3.5 sm:p-6 space-y-3.5 sm:space-y-4">
                 {/* SI HAY PERSONAJE HABLANDO (SPEAKER) */}
                 {currentNode.speaker && (
                   <div className="flex items-center gap-3.5 bg-gradient-to-r from-stone-950 via-amber-950/30 to-stone-950 border border-amber-600/50 rounded-2xl p-3 shadow-lg">
@@ -461,22 +461,22 @@ export default function GameEngine() {
 
                 {/* MODO ENTRADA DE TEXTO (Para Nombres o Acertijos) */}
                 {currentNode.type === 'input' && currentNode.inputConfig && (
-                  <form onSubmit={handleInputSubmit} className="space-y-3 pt-2">
-                    <label className="block text-xs font-bold font-layton text-amber-300 uppercase tracking-widest">
+                  <form onSubmit={handleInputSubmit} className="space-y-2.5 sm:space-y-3 pt-1 sm:pt-2">
+                    <label className="block text-[11px] sm:text-xs font-bold font-layton text-amber-300 uppercase tracking-wider sm:tracking-widest">
                       {currentNode.inputConfig.label}
                     </label>
-                    <div className="flex gap-2.5">
+                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-2.5">
                       <input
                         type="text"
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         placeholder={currentNode.inputConfig.placeholder}
                         autoFocus
-                        className="flex-1 bg-stone-950/80 border-2 border-amber-600/50 rounded-xl px-4 py-2.5 text-sm sm:text-base text-amber-100 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-amber-400 font-parchment shadow-inner"
+                        className="flex-1 bg-stone-950/80 border-2 border-amber-600/50 rounded-xl px-3.5 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm md:text-base text-amber-100 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-amber-400 font-parchment shadow-inner"
                       />
                       <button
                         type="submit"
-                        className="btn-layton-tactile px-6 py-2.5 rounded-xl font-layton font-extrabold text-xs sm:text-sm text-amber-200 transition flex items-center gap-2 shadow-lg"
+                        className="btn-layton-tactile px-5 sm:px-6 py-2.5 rounded-xl font-layton font-extrabold text-xs sm:text-sm text-amber-200 transition flex items-center justify-center gap-2 shadow-lg w-full sm:w-auto"
                       >
                         <span>Confirmar</span>
                         <span>➔</span>
@@ -487,12 +487,12 @@ export default function GameEngine() {
 
                 {/* PARRILLA DE BOTONES DE ACCIONES (TÁCTILES ESTILO LAYTON) */}
                 {currentNode.choices && currentNode.choices.length > 0 && (
-                  <div className="space-y-2.5 pt-2">
-                    <div className="text-[11px] font-bold font-layton text-amber-400/90 uppercase tracking-widest px-1 flex items-center gap-2">
+                  <div className="space-y-2 sm:space-y-2.5 pt-1 sm:pt-2">
+                    <div className="text-[10px] sm:text-[11px] font-bold font-layton text-amber-400/90 uppercase tracking-wider sm:tracking-widest px-1 flex items-center gap-1.5 sm:gap-2">
                       <span>⚖️</span>
                       <span>Deducciones y Acciones Disponibles:</span>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                       {currentNode.choices.map((choice, index) => {
                         const isAvailable = !choice.condition || choice.condition(gameState);
                         const romanNum = ROMAN_NUMERALS[index] || (index + 1).toString();
@@ -502,7 +502,7 @@ export default function GameEngine() {
                             key={choice.id}
                             disabled={!isAvailable}
                             onClick={() => handleChoice(choice)}
-                            className={`btn-layton-tactile p-4 rounded-2xl flex items-start gap-3.5 text-left group ${
+                            className={`btn-layton-tactile p-3 sm:p-4 rounded-xl sm:rounded-2xl flex items-start gap-2.5 sm:gap-3.5 text-left group min-h-[52px] sm:min-h-[60px] ${
                               isAvailable
                                 ? 'cursor-pointer'
                                 : 'opacity-40 cursor-not-allowed filter grayscale'
@@ -510,7 +510,7 @@ export default function GameEngine() {
                           >
                             {/* MEDALLÓN CON NUMERACIÓN ROMANA */}
                             <div
-                              className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-layton font-black flex-shrink-0 mt-0.5 border shadow-md transition-transform group-hover:scale-110 ${
+                              className={`w-6 h-6 sm:w-7 sm:h-7 rounded-md sm:rounded-lg flex items-center justify-center text-[10px] sm:text-xs font-layton font-black flex-shrink-0 mt-0.5 border shadow-md transition-transform group-hover:scale-110 ${
                                 isAvailable
                                   ? 'coin-medal text-stone-950'
                                   : 'bg-stone-950 text-stone-600 border-stone-800'
@@ -522,7 +522,7 @@ export default function GameEngine() {
                             {/* TEXTO DE LA OPCIÓN */}
                             <div className="flex-1 min-w-0">
                               <div
-                                className={`text-sm sm:text-base font-semibold font-parchment leading-snug transition-colors ${
+                                className={`text-xs sm:text-sm md:text-base font-semibold font-parchment leading-snug transition-colors ${
                                   isAvailable
                                     ? 'text-stone-200 group-hover:text-amber-200'
                                     : 'text-stone-500 line-through'
@@ -532,7 +532,7 @@ export default function GameEngine() {
                               </div>
 
                               {!isAvailable && choice.disabledReason && (
-                                <div className="text-[11px] text-rose-400 mt-1.5 flex items-center gap-1 font-sans bg-rose-950/40 px-2 py-0.5 rounded-md border border-rose-800/40">
+                                <div className="text-[10px] sm:text-[11px] text-rose-400 mt-1 flex items-center gap-1 font-sans bg-rose-950/40 px-2 py-0.5 rounded-md border border-rose-800/40">
                                   <span>🔒</span>
                                   <span>{choice.disabledReason}</span>
                                 </div>
@@ -541,7 +541,7 @@ export default function GameEngine() {
 
                             {/* FLECHA DE AVANCE */}
                             {isAvailable && (
-                              <div className="text-amber-500/70 group-hover:text-amber-300 group-hover:translate-x-1 transition-all text-sm mt-0.5">
+                              <div className="text-amber-500/70 group-hover:text-amber-300 group-hover:translate-x-1 transition-all text-xs sm:text-sm mt-0.5">
                                 ➔
                               </div>
                             )}
@@ -558,8 +558,8 @@ export default function GameEngine() {
       </main>
 
       {/* PIE DE PÁGINA */}
-      <footer className="w-full text-center py-3.5 text-xs text-stone-500 border-t border-amber-950/40 font-layton">
-        <p>
+      <footer className="w-full text-center px-3 py-3 sm:py-3.5 text-[11px] sm:text-xs text-stone-500 border-t border-amber-950/40 font-layton">
+        <p className="leading-relaxed">
           El Profesor Python y El Misterio de la Alcantarilla &bull; Desarrollado por{' '}
           <span className="text-amber-400/90 font-bold">Pablo Jiménez Jorquera</span> &amp;{' '}
           <span className="text-amber-400/90 font-bold">Ayoub Atidi Belbaz</span>

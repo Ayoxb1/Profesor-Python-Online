@@ -106,31 +106,31 @@ export default function RiverPuzzle({ gameState, onSuccess, onExit }: RiverPuzzl
       {/* CABECERA DEL ACERTIJO */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-800/40 pb-4">
         <div>
-          <span className="text-xs uppercase font-sans font-bold tracking-widest text-amber-400">
+          <span className="text-[10px] sm:text-xs uppercase font-sans font-bold tracking-wider sm:tracking-widest text-amber-400">
             Enigma Original de Bosque
           </span>
-          <h3 className="text-xl sm:text-2xl font-bold font-layton text-amber-300">
+          <h3 className="text-lg sm:text-2xl font-bold font-layton text-amber-300 leading-tight">
             El Acertijo del Río y la Linterna
           </h3>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="bg-amber-950/70 border border-amber-600/50 px-3.5 py-1.5 rounded-xl flex items-center gap-2">
-            <span className="text-sm">⏱️</span>
-            <span className="font-mono text-base font-bold text-amber-300">{totalTime} min</span>
-            <span className="text-[10px] text-stone-400 font-sans">(Meta: ≤17m)</span>
+        <div className="flex items-center flex-wrap gap-2 sm:gap-3">
+          <div className="bg-amber-950/70 border border-amber-600/50 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-xl flex items-center gap-1.5 sm:gap-2">
+            <span className="text-xs sm:text-sm">⏱️</span>
+            <span className="font-mono text-sm sm:text-base font-bold text-amber-300">{totalTime} min</span>
+            <span className="text-[9px] sm:text-[10px] text-stone-400 font-sans">(Meta: ≤17m)</span>
           </div>
 
           <button
             onClick={() => setShowRules(!showRules)}
-            className="px-3 py-1.5 rounded-xl bg-stone-800 hover:bg-stone-700 border border-stone-600 text-xs font-layton text-amber-200 transition"
+            className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-stone-800 hover:bg-stone-700 border border-stone-600 text-[11px] sm:text-xs font-layton text-amber-200 transition"
           >
-            {showRules ? 'Ocultar Reglas' : '📖 Reglas'}
+            {showRules ? 'Ocultar' : '📖 Reglas'}
           </button>
 
           <button
             onClick={handleReset}
-            className="px-3 py-1.5 rounded-xl bg-rose-950/60 hover:bg-rose-900 border border-rose-700/50 text-xs font-layton text-rose-200 transition"
+            className="p-1 sm:px-2.5 py-1 rounded-xl bg-rose-950/60 hover:bg-rose-900 border border-rose-700/50 text-xs font-layton text-rose-200 transition"
             title="Reiniciar cruces"
           >
             🔄
@@ -230,7 +230,7 @@ export default function RiverPuzzle({ gameState, onSuccess, onExit }: RiverPuzzl
           <button
             onClick={handleCross}
             disabled={selectedIds.length === 0}
-            className={`relative z-10 px-5 py-2.5 rounded-xl font-layton font-bold text-sm transition shadow-lg flex items-center gap-2 ${
+            className={`relative z-10 w-full sm:w-auto px-5 py-2.5 rounded-xl font-layton font-bold text-xs sm:text-sm transition shadow-lg flex items-center justify-center gap-2 ${
               selectedIds.length > 0
                 ? 'bg-amber-500 hover:bg-amber-400 text-stone-950 shadow-amber-900/50 hover:scale-105 active:scale-95'
                 : 'bg-stone-800 text-stone-500 border border-stone-700 cursor-not-allowed'

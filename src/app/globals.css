@@ -26,6 +26,8 @@ body {
   font-family: 'EB Garamond', Georgia, serif;
   overflow-x: hidden;
   min-height: 100vh;
+  min-height: 100dvh;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* TIPOGRAFÍAS DE PRESTIGIO */
@@ -48,12 +50,25 @@ body {
   border: 2px solid #854d0e;
   box-shadow: 
     0 0 0 1px #451a03,
-    0 0 0 3px #1c1917,
-    0 0 0 5px #b45309,
+    0 0 0 2px #1c1917,
+    0 0 0 4px #b45309,
     inset 0 1px 1px rgba(254, 240, 138, 0.25),
     inset 0 -2px 4px rgba(0, 0, 0, 0.8),
-    0 25px 60px -10px rgba(0, 0, 0, 0.95);
-  border-radius: 1.5rem;
+    0 15px 40px -10px rgba(0, 0, 0, 0.95);
+  border-radius: 1rem;
+}
+
+@media (min-width: 640px) {
+  .layton-container {
+    border-radius: 1.5rem;
+    box-shadow: 
+      0 0 0 1px #451a03,
+      0 0 0 3px #1c1917,
+      0 0 0 5px #b45309,
+      inset 0 1px 1px rgba(254, 240, 138, 0.25),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.8),
+      0 25px 60px -10px rgba(0, 0, 0, 0.95);
+  }
 }
 
 /* PERGAMINO INTERIOR (ÁREA DE TEXTO) */
