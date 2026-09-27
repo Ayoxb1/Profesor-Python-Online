@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>El Profesor Python y El Misterio de la Alcantarilla</title>
   
-  <!-- CheerpJ 3 WebAssembly Java Virtual Machine Loader -->
-  <script src="https://cjrtnc.leaningtech.com/3.0/loader.js"></script>
+  <!-- CheerpJ 3 Official Loader Script -->
+  <script src="https://cjrtnc.leaningtech.com/3.0/cj3loader.js"></script>
 
   <style>
     * {
@@ -113,12 +113,13 @@
       background: rgba(239, 68, 68, 0.12);
       border: 1px solid #ef4444;
       color: #fca5a5;
-      padding: 12px 18px;
-      border-radius: 6px;
+      padding: 14px 20px;
+      border-radius: 8px;
       font-size: 0.85rem;
-      max-width: 500px;
+      max-width: 550px;
       margin-top: 10px;
-      line-height: 1.4;
+      line-height: 1.5;
+      text-align: left;
     }
 
     /* Barra de control inferior */
@@ -165,7 +166,7 @@
     <!-- Pantalla de carga y estado -->
     <div id="loading-screen">
       <div class="spinner" id="spinner"></div>
-      <p id="loading-text">Iniciando entorno WebAssembly...</p>
+      <p id="loading-text">Conectando con el entorno WebAssembly...</p>
       <div id="error-box"></div>
     </div>
 
@@ -175,12 +176,26 @@
 
   <footer>
     <button class="btn" id="btn-fullscreen" onclick="toggleFullScreen()">⛶ Pantalla Completa</button>
-    <a class="btn" href="https://github.com/Ayoxb1/Aventura-Grafica-Profesor-Python" target="_blank" rel="noopener">
+    <a class="btn" href="https://github.com/Ayoxb1/Profesor-Python-Online" target="_blank" rel="noopener">
       ⭐ Repositorio GitHub
     </a>
   </footer>
 
   <script>
+    async function waitForCheerpJ() {
+      let attempts = 0;
+      while (typeof cheerpjInit !== "function" && attempts < 50) {
+        await new Promise(r => setTimeout(r, 100));
+        attempts++;
+      }
+      if (typeof cheerpjInit !== "function") {
+        throw new Error(
+          "No se pudo cargar el script de CheerpJ 3 (cj3loader.js). " +
+          "Si usas Brave o extensiones ad-block, desactiva temporalmente los 'Escudos de Brave' para este sitio."
+        );
+      }
+    }
+
     async function initGame() {
       const statusText = document.getElementById("loading-text");
       const loadingScreen = document.getElementById("loading-screen");
@@ -189,22 +204,23 @@
       const displayContainer = document.getElementById("cheerpj-display");
 
       try {
-        statusText.innerText = "Inicializando máquina virtual Java (CheerpJ 3)...";
-        
+        statusText.innerText = "Cargando motor de CheerpJ 3...";
+        await waitForCheerpJ();
+
+        statusText.innerText = "Inicializando máquina virtual Java WebAssembly...";
         await cheerpjInit({
-          version: 17,
-          status: "none"
+          version: 17
         });
 
-        statusText.innerText = "Preparando canvas gráfico...";
+        statusText.innerText = "Creando lienzo gráfico AWT/Swing...";
         cheerpjCreateDisplay(1024, 768, displayContainer);
 
-        statusText.innerText = "Cargando juego.jar...";
+        statusText.innerText = "Descargando e iniciando juego.jar...";
 
-        // Ejecutar el JAR ubicado en la raíz del servidor web (/app/juego.jar)
+        // Ejecutar el JAR ubicado en la raíz del servidor web
         const exitCodePromise = cheerpjRunJar("/app/juego.jar");
 
-        // Ocultar overlay de carga tras inicialización gráfica
+        // Ocultar overlay de carga tras inicialización
         setTimeout(() => {
           loadingScreen.style.opacity = "0";
           setTimeout(() => {
@@ -219,7 +235,7 @@
         statusText.innerText = "No se pudo iniciar el juego.";
         errorBox.style.display = "block";
         errorBox.innerHTML = `<strong>Detalle del error:</strong> ${err.message || err}<br/><br/>
-        Asegúrate de que <code>juego.jar</code> está subido en la raíz de la web y que los encabezados COOP/COEP están activos.`;
+        <em>Si el error persiste, comprueba la consola de desarrollador (F12) para más detalles.</em>`;
       }
     }
 
