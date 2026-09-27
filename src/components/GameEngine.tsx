@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { GameState, StoryNode, Choice, InventoryItem } from '../types/game';
-import { storyNodes, initialGameState } from '../data/storyNodes';
+import { STORY_NODES as storyNodes, INITIAL_GAME_STATE as initialGameState } from '../data/storyNodes';
 
 export default function GameEngine() {
   const [gameState, setGameState] = useState<GameState>(initialGameState);
