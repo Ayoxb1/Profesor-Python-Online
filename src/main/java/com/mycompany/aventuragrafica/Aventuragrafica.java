@@ -167,13 +167,27 @@ static void datosPersonajes() {
         );
 
         switch (eleccion) {
-            case 0 -> plazaCentral();
-            case 1 -> mercadoMayorista();
-            case 2 -> barrioAntiguo();
-            case 3 -> alamedaAullante();
-            case 4 -> estacionCentral();
-            case 5 -> salirJuego();
-            default -> escenaPrincipal();
+            case 0:
+                plazaCentral();
+                break;
+            case 1:
+                mercadoMayorista();
+                break;
+            case 2:
+                barrioAntiguo();
+                break;
+            case 3:
+                alamedaAullante();
+                break;
+            case 4:
+                estacionCentral();
+                break;
+            case 5:
+                salirJuego();
+                break;
+            default:
+                escenaPrincipal();
+                break;
         }
     }
 
@@ -202,7 +216,7 @@ Reproductor.reproducirBucle("src/main/java/resources/Sonidos/Ciudad.mp3");
     );
 
     switch (eleccion) {
-        case 0 -> { // Hablar con el señor HECHO
+        case 0: { // Hablar con el señor HECHO
             if (!hablarSeñor) {
                 FuncionesGraficas.FotoyMensaje(
                     "Señor misterioso",
@@ -226,16 +240,32 @@ Reproductor.reproducirBucle("src/main/java/resources/Sonidos/Ciudad.mp3");
             plazaCentral();
 
         }
-        case 1 -> { // Alcantarilla HECHO
+            break;
+
+        case 1: { // Alcantarilla HECHO
             escenaAlcantarilla();
             plazaCentral();
         }
-        case 2 -> barrioAntiguo();//HECHO
-        case 3 -> alamedaAullante();//HECHO
-        case 4 -> mercadoMayorista(); //HECHO
-        case 5 -> estacionCentral();//HECHO
-        case 6 -> salirJuego();//HECHO
-        default -> plazaCentral();
+            break;
+
+        case 2:
+                barrioAntiguo();
+                break;//HECHO
+        case 3:
+                alamedaAullante();
+                break;//HECHO
+        case 4:
+                mercadoMayorista();
+                break; //HECHO
+        case 5:
+                estacionCentral();
+                break;//HECHO
+        case 6:
+                salirJuego();
+                break;//HECHO
+        default:
+                plazaCentral();
+                break;
     }
 }
 
@@ -274,7 +304,7 @@ static void escenaAlcantarilla() {                  //HECHO
     );
 
     switch (eleccion) {
-        case 0 -> {
+        case 0: {
             FuncionesGraficas.FotoyMensaje(
                 "Tras el árbol",
                 "src/main/java/resources/imagenes/alameda_aullante/buscando_detras.png",
@@ -286,8 +316,12 @@ static void escenaAlcantarilla() {                  //HECHO
             alamedaAullante();
 
         }
-        case 1 -> plazaCentral();//HECHO
-        case 2 -> {
+            break;
+
+        case 1:
+                plazaCentral();
+                break;//HECHO
+        case 2: {
             FuncionesGraficas.FotoyMensaje(
                 "Camino izquierdo",
                 "src/main/java/resources/imagenes/alameda_aullante/bifurcacion_camino.png",
@@ -299,7 +333,9 @@ static void escenaAlcantarilla() {                  //HECHO
             Reproductor.reproducir("src/main/java/resources/sonidos/Acertijo.mp3");
                AcertijoRioBosque.lanzar();   // AQUÍ se ejecuta el acertijo
         }
-        case 3 -> {
+            break;
+
+        case 3: {
             FuncionesGraficas.FotoyMensaje(
                 "Camino derecho",
                 "src/main/java/resources/imagenes/alameda_aullante/camino_derecha.png",
@@ -308,9 +344,15 @@ static void escenaAlcantarilla() {                  //HECHO
                 false
             );
        
-        }   
-        case 4 -> salirJuego();
-        default -> alamedaAullante();
+        }
+            break;
+   
+        case 4:
+                salirJuego();
+                break;
+        default:
+                alamedaAullante();
+                break;
     }
 }
 
@@ -337,7 +379,7 @@ static void escenaAlcantarilla() {                  //HECHO
         );
 
         switch (eleccion) {
-            case 0 -> {
+            case 0: {
                 FuncionesGraficas.FotoyMensaje(
                         "Alrededores",
                         "src/main/java/resources/imagenes/central_nuclear/ciudad_aliens.png",
@@ -347,7 +389,9 @@ static void escenaAlcantarilla() {                  //HECHO
                 );
                 centralNuclear();
             }
-            case 1 -> {
+            break;
+
+            case 1: {
                 FuncionesGraficas.FotoyMensaje(
                         "Segurata",
                         "src/main/java/resources/imagenes/central_nuclear/conversacion_guardia.png",
@@ -357,10 +401,20 @@ static void escenaAlcantarilla() {                  //HECHO
                 );
                 centralNuclear();
             }
-            case 2 -> estacionCentral();
-            case 3 -> alamedaAullante();
-            case 4 -> salirJuego();
-            default -> centralNuclear();
+            break;
+
+            case 2:
+                estacionCentral();
+                break;
+            case 3:
+                alamedaAullante();
+                break;
+            case 4:
+                salirJuego();
+                break;
+            default:
+                centralNuclear();
+                break;
         }
     }
 
@@ -385,9 +439,13 @@ static void escenaAlcantarilla() {                  //HECHO
         );
 
         switch (eleccion) {
-            case 0 -> plazaCentral();
-            case 1 -> mercadoMayorista();
-            case 2 -> {
+            case 0:
+                plazaCentral();
+                break;
+            case 1:
+                mercadoMayorista();
+                break;
+            case 2: {
                 if (dinero >= 10) {
                     centralNuclear();
                 } else {
@@ -395,7 +453,9 @@ static void escenaAlcantarilla() {                  //HECHO
                     estacionCentral();
                 }
             }
-            case 3 -> {
+            break;
+
+            case 3: {
                 FuncionesGraficas.FotoyMensaje(
                         "Andén",
                         "src/main/java/resources/imagenes/estacion_central/estacion central dentro.png",
@@ -405,8 +465,14 @@ static void escenaAlcantarilla() {                  //HECHO
                 );
                 estacionCentral();
             }
-            case 4 -> salirJuego();
-            default -> estacionCentral();
+            break;
+
+            case 4:
+                salirJuego();
+                break;
+            default:
+                estacionCentral();
+                break;
         }
     }
 
@@ -432,11 +498,21 @@ static void escenaAlcantarilla() {                  //HECHO
     // ===== MERCADO MAYORISTA =====
  
         switch (eleccion) {
-            case 0 -> entrarBiblioteca();
-            case 1 -> plazaCentral();
-            case 2 -> callejonOscuro();
-            case 3 -> salirJuego();
-            default -> barrioAntiguo();
+            case 0:
+                entrarBiblioteca();
+                break;
+            case 1:
+                plazaCentral();
+                break;
+            case 2:
+                callejonOscuro();
+                break;
+            case 3:
+                salirJuego();
+                break;
+            default:
+                barrioAntiguo();
+                break;
         }
     }
 
@@ -483,12 +559,24 @@ Reproductor.reproducir("src/main/java/resources/Sonidos/MercadoMayoristaAudio.mp
         );
 
         switch (eleccion) {
-            case 0 -> irALaTienda();
-            case 1 -> irALBazar();
-            case 2 -> estacionCentral();
-            case 3 -> plazaCentral();
-            case 4-> salirJuego();
-            default -> mercadoMayorista();
+            case 0:
+                irALaTienda();
+                break;
+            case 1:
+                irALBazar();
+                break;
+            case 2:
+                estacionCentral();
+                break;
+            case 3:
+                plazaCentral();
+                break;
+            case 4:
+                salirJuego();
+                break;
+            default:
+                mercadoMayorista();
+                break;
         }
     }
 
@@ -513,7 +601,7 @@ Reproductor.reproducir("src/main/java/resources/Sonidos/TiendaCampanas.mp3");
         );
 
         switch (eleccion) {
-            case 0 -> {
+            case 0: {
                 FuncionesGraficas.FotoyMensaje(
                         "Interior tienda",
                         "src/main/java/resources/imagenes/Zona_tienda_bazar/dependiente_mercado.png",
@@ -523,7 +611,9 @@ Reproductor.reproducir("src/main/java/resources/Sonidos/TiendaCampanas.mp3");
                 );
                 irALaTienda();
             }
-            case 1 -> {
+            break;
+
+            case 1: {
                 if (colarseTienda) {
                     FuncionesGraficas.warning("Aviso", "Alguien debería saber que te sigues colando...");
                 } else {
@@ -531,9 +621,17 @@ Reproductor.reproducir("src/main/java/resources/Sonidos/TiendaCampanas.mp3");
                 }
                 irALaTienda();
             }
-            case 2 -> mercadoMayorista();
-            case 3 -> salirJuego();
-            default -> irALaTienda();
+            break;
+
+            case 2:
+                mercadoMayorista();
+                break;
+            case 3:
+                salirJuego();
+                break;
+            default:
+                irALaTienda();
+                break;
         }
         Reproductor.parar();
     }
@@ -556,10 +654,18 @@ Reproductor.reproducirBucle("src/main/java/resources/Sonidos/BazarHablando.mp3")
         );
 
         switch (eleccion) {
-            case 0 -> acertijo1();
-            case 1 -> mercadoMayorista();
-            case 2 -> salirJuego();
-            default -> irALBazar();
+            case 0:
+                acertijo1();
+                break;
+            case 1:
+                mercadoMayorista();
+                break;
+            case 2:
+                salirJuego();
+                break;
+            default:
+                irALBazar();
+                break;
         }
     }
 
@@ -582,13 +688,21 @@ Reproductor.reproducirBucle("src/main/java/resources/Sonidos/BazarHablando.mp3")
         );
 
         switch (eleccion) {
-            case 0 -> {
+            case 0: {
                 acertijo1();
                 colarseTienda = true;
             }
-            case 1 -> { /* volver sin hacer nada */ }
-            case 2 -> salirJuego();
-            default -> colarseTienda();
+            break;
+
+            case 1: { /* volver sin hacer nada */ }
+            break;
+
+            case 2:
+                salirJuego();
+                break;
+            default:
+                colarseTienda();
+                break;
         }
     }
 

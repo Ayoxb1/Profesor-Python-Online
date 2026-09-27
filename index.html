@@ -208,9 +208,7 @@
         await waitForCheerpJ();
 
         statusText.innerText = "Inicializando máquina virtual Java WebAssembly...";
-        await cheerpjInit({
-          version: 17
-        });
+        await cheerpjInit();
 
         statusText.innerText = "Creando lienzo gráfico AWT/Swing...";
         cheerpjCreateDisplay(1024, 768, displayContainer);

@@ -64,9 +64,15 @@ public class AcertijoRioBosque {
             );
 
             switch (opcion) {
-                case 1 -> hacerCruce();
-                case 2 -> mostrarReglas();
-                default -> salir = true;
+                case 1:
+                    hacerCruce();
+                    break;
+                case 2:
+                    mostrarReglas();
+                    break;
+                default:
+                    salir = true;
+                    break;
             }
         }
     }
