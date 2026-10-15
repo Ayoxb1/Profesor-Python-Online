@@ -1885,21 +1885,42 @@ html, body {
    MODAL DE MAPA METROPOLITANO
    ========================================================================== */
 .map-modal-box {
-  max-width: 780px;
+  max-width: 640px;
+  width: 95vw;
+}
+
+.map-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .city-map-container {
   width: 100%;
-  height: 380px;
-  background: radial-gradient(circle at center, #132238 0%, #060a12 100%);
+  max-width: 560px;
+  aspect-ratio: 1 / 1;
   border: 1px solid var(--border-glass);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   position: relative;
   overflow: hidden;
-  background-image: 
-    linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
-  background-size: 30px 30px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(56, 189, 248, 0.15);
+  background: #000;
+}
+
+.map-illustration {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.map-hotspots-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .map-node {
@@ -1908,47 +1929,60 @@ html, body {
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  transition: transform var(--transition-fast);
+  transform: translate(-50%, -50%);
+  transition: transform var(--transition-fast), filter var(--transition-fast);
+  z-index: 10;
 }
 
 .map-node:hover {
-  transform: scale(1.12);
+  transform: translate(-50%, -50%) scale(1.15);
+  filter: drop-shadow(0 0 10px var(--accent-cyan));
 }
 
 .node-marker {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   background: var(--accent-cyan);
-  border: 2px solid #fff;
-  box-shadow: 0 0 12px var(--accent-cyan);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 14px var(--accent-cyan);
+  display: block;
 }
 
 .map-node.current .node-marker {
   background: var(--accent-gold);
-  box-shadow: 0 0 16px var(--accent-gold);
+  border-color: #fff;
+  box-shadow: 0 0 18px var(--accent-gold);
   animation: pulseMarker 1.5s infinite;
 }
 
 .node-name {
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 0.72rem;
+  font-weight: 700;
   color: #fff;
-  background: rgba(0, 0, 0, 0.7);
-  padding: 2px 8px;
+  background: rgba(3, 6, 12, 0.88);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  padding: 3px 8px;
   border-radius: var(--radius-sm);
-  margin-top: 6px;
+  margin-top: 5px;
   white-space: nowrap;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+  pointer-events: none;
 }
 
-/* Posiciones en el mapa */
-.node-ciudad { top: 50%; left: 50%; transform: translate(-50%, -50%); }
-.node-plaza { top: 30%; left: 35%; }
-.node-mercado { top: 30%; left: 65%; }
-.node-barrio { top: 68%; left: 30%; }
-.node-alameda { top: 20%; left: 15%; }
-.node-estacion { top: 70%; left: 68%; }
-.node-nuclear { top: 80%; left: 85%; }
+.map-node.current .node-name {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+/* Posiciones exactas sobre ciudad_juego.png */
+.node-nuclear  { top: 11%; left: 72%; }
+.node-alameda  { top: 26%; left: 62%; }
+.node-barrio   { top: 37%; left: 26%; }
+.node-plaza    { top: 55%; left: 58%; }
+.node-mercado  { top: 68%; left: 78%; }
+.node-estacion { top: 90%; left: 72%; }
 
 .map-hint {
   font-size: 0.8rem;
