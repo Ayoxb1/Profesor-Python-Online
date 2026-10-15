@@ -1490,8 +1490,10 @@ function iniciarNuevaAventura() {
   const btnSkipCutscene = document.getElementById("btn-skip-cutscene");
   const cutsceneGif = document.getElementById("cutscene-gif");
 
-  if (cutsceneGif && !cutsceneGif.src) {
-    cutsceneGif.src = cutsceneGif.dataset.src || "assets/images/video_entrada.gif";
+  if (cutsceneGif) {
+    if (!cutsceneGif.src || !cutsceneGif.src.includes("video_entrada.gif")) {
+      cutsceneGif.src = "assets/images/video_entrada.gif";
+    }
   }
 
   cutsceneOverlay.classList.add("active");
