@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>El Profesor Python y El Misterio de la Alcantarilla - Aventura Gráfica</title>
+  <meta name="description" content="Aventura gráfica interactiva moderna inspirada en clásicos del misterio. Explora la ciudad, resuelve enigmas y desvela los secretos subterráneos.">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/images/portada.png">
+  
+  <!-- Google Fonts: Outfit (UI moderna) + Cinzel (Títulos misterio) + JetBrains Mono (Códigos y Enigmas) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Hoja de estilos del juego -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-noir">
+
+  <!-- CAPA DE AUDIO DE FONDO Y SFX -->
+  <audio id="bgm-player" loop preload="auto"></audio>
+  <audio id="sfx-player" preload="auto"></audio>
+  <audio id="sfx-secondary" preload="auto"></audio>
+
+  <!-- PANTALLA COMPLETA CONTENEDOR DEL JUEGO -->
+  <div id="game-app" class="game-container">
+
+    <!-- HUD SUPERIOR (TOP BAR) -->
+    <header class="hud-header">
+      <div class="hud-brand">
+        <div class="hud-logo-icon">
+          <i data-lucide="compass"></i>
+        </div>
+        <div class="hud-logo-meta">
+          <span class="hud-title">PROFESOR PYTHON</span>
+          <span class="hud-subtitle">Y El Misterio de la Alcantarilla</span>
+        </div>
+      </div>
+
+      <!-- ESTADOS RÁPIDOS DEL JUGADOR -->
+      <div class="hud-stats-group">
+        <div class="stat-pill" id="stat-player" title="Jugador actual">
+          <i data-lucide="user"></i>
+          <span class="stat-label">Jugador:</span>
+          <span class="stat-val" id="hud-player-name">Investigador</span>
+        </div>
+
+        <div class="stat-pill" id="stat-team" title="Equipo detective">
+          <i data-lucide="users"></i>
+          <span class="stat-label">Equipo:</span>
+          <span class="stat-val" id="hud-team-names">Chico & Chica</span>
+        </div>
+
+        <div class="stat-pill stat-money" id="stat-money" title="Monedas acumuladas">
+          <i data-lucide="coins" class="coin-icon"></i>
+          <span class="stat-label">Dinero:</span>
+          <span class="stat-val" id="hud-money-count">0</span>
+          <span class="stat-unit">oro</span>
+        </div>
+
+        <div class="stat-pill stat-location" id="stat-location" title="Ubicación actual">
+          <span class="location-pulse"></span>
+          <span class="stat-val" id="hud-location-name">Ciudad</span>
+        </div>
+      </div>
+
+      <!-- CONTROLES Y ENLACES DE PORTFOLIO SUPERIORES -->
+      <div class="hud-actions-group">
+        <!-- ENLACES DE PORTFOLIO OBLIGATORIOS -->
+        <a href="https://github.com/Ayoxb1/Aventura-Grafica-Profesor-Python.git" target="_blank" rel="noopener noreferrer" class="hud-btn hud-btn-portfolio btn-repo" title="Ver código fuente original en Java">
+          <i data-lucide="code-2"></i>
+          <span class="btn-text">Ver código Java</span>
+        </a>
+
+        <a href="https://docs.google.com/presentation/d/1KkS6pUo7uKIwQFdt-uiUk2OvdrBb7-lsdlU-fXbOa-Q/edit?slide=id.p1#slide=id.p1" target="_blank" rel="noopener noreferrer" class="hud-btn hud-btn-portfolio btn-pres" title="Ver presentación oficial del proyecto">
+          <i data-lucide="presentation"></i>
+          <span class="btn-text">Ver presentación</span>
+        </a>
+
+        <!-- ACCIONES RÁPIDAS EN EL JUEGO -->
+        <button id="btn-codex" class="hud-btn" title="Diario de Notas y Galería">
+          <i data-lucide="book-open"></i>
+        </button>
+
+        <button id="btn-map" class="hud-btn" title="Mapa de la Ciudad">
+          <i data-lucide="map"></i>
+        </button>
+
+        <button id="btn-audio-toggle" class="hud-btn" title="Silenciar / Activar sonido">
+          <i data-lucide="volume-2" id="audio-icon"></i>
+        </button>
+
+        <button id="btn-credits" class="hud-btn" title="Créditos y Autores">
+          <i data-lucide="info"></i>
+        </button>
+
+        <button id="btn-fullscreen" class="hud-btn" title="Pantalla completa">
+          <i data-lucide="maximize"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- ESCENARIO PRINCIPAL (VIEWPORT CINEMATOGRÁFICO) -->
+    <main class="game-viewport" id="viewport">
+      
+      <!-- CAPA DE FONDO VISUAL AMBIENTAL (ILUMINACIÓN AMBIENTAL DIFUSA) -->
+      <div class="scene-background-wrapper">
+        <div id="scene-bg" class="scene-background"></div>
+        <div class="scene-fx-scanlines"></div>
+        <div class="scene-fx-vignette"></div>
+      </div>
+
+      <!-- INDICADOR DE ENCABEZADO DE ESCENA -->
+      <div class="scene-banner" id="scene-banner">
+        <span class="scene-tag">CASO #01 • EXPEDIENTE SUBTERRÁNEO</span>
+        <h2 class="scene-title" id="scene-title">CIUDAD PRINCIPAL</h2>
+      </div>
+
+      <!-- CONTENEDOR CENTRAL DE LA ILUSTRACIÓN (EN MEDIO, GRANDE Y NÍTIDA) -->
+      <div class="central-stage-wrapper">
+        <div class="central-image-frame" id="central-image-frame" title="Haz clic sobre la imagen para ampliar en alta definición">
+          <img id="main-scene-image" src="assets/images/ciudad_juego.png" alt="Ilustración principal de la escena" class="main-scene-img">
+          <div class="image-zoom-badge">
+            <i data-lucide="maximize-2"></i>
+            <span>Ampliar</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ZONA INFERIOR: DIÁLOGO Y ELECCIONES DOCK -->
+      <div class="bottom-dock-container">
+        <!-- PANEL DE HISTORIA Y DIÁLOGO (HUD GLASSMORPHISM) -->
+        <section class="dialogue-hud" id="dialogue-hud">
+          <div class="dialogue-top-meta">
+            <div class="speaker-tag" id="speaker-tag">
+              <i data-lucide="message-square-quote"></i>
+              <span id="speaker-name">NARRADOR</span>
+            </div>
+            <span class="click-hint" id="click-hint">
+              <i data-lucide="corner-down-left"></i> Clic o Espacio para continuar
+            </span>
+          </div>
+
+          <div class="dialogue-content" id="dialogue-box">
+            <p class="dialogue-text" id="dialogue-text">
+              Cargando expedientes del Profesor Python...
+            </p>
+            <div class="typewriter-cursor"></div>
+          </div>
+        </section>
+
+        <!-- PANEL DE ELECCIONES / MENÚ DE DECISIONES -->
+        <section class="choices-hud" id="choices-hud">
+          <div class="choices-prompt" id="choices-prompt">¿Qué decides hacer?</div>
+          <div class="choices-grid" id="choices-container">
+            <!-- Los botones de elección se inyectan dinámicamente -->
+          </div>
+        </section>
+      </div>
+
+      <!-- PANTALLA DE INTRODUCCIÓN / TÍTULO -->
+      <div class="title-screen-overlay active" id="title-screen">
+        <div class="title-backdrop"></div>
+        <div class="title-content">
+          <div class="title-badge">AVENTURA GRÁFICA DE INVESTIGACIÓN</div>
+          <h1 class="main-title">EL PROFESOR PYTHON</h1>
+          <h2 class="sub-title">Y El Misterio de la Alcantarilla</h2>
+          <p class="title-tagline">Una civilización olvidada, enigmas milenarios y una ciudad a punto de descubrir la verdad.</p>
+          
+          <div class="title-actions">
+            <button id="btn-start-adventure" class="btn-primary-glow">
+              <i data-lucide="play"></i>
+              <span>INICIAR INVESTIGACIÓN</span>
+            </button>
+            <button id="btn-continue-adventure" class="btn-secondary-glow" style="display: none;">
+              <i data-lucide="rotate-ccw"></i>
+              <span>CONTINUAR PARTIDA</span>
+            </button>
+          </div>
+
+          <div class="title-footer-links">
+            <a href="https://github.com/Ayoxb1/Aventura-Grafica-Profesor-Python.git" target="_blank" rel="noopener noreferrer">
+              <i data-lucide="github"></i> Código Java Original
+            </a>
+            <span class="sep">•</span>
+            <a href="https://docs.google.com/presentation/d/1KkS6pUo7uKIwQFdt-uiUk2OvdrBb7-lsdlU-fXbOa-Q/edit?slide=id.p1#slide=id.p1" target="_blank" rel="noopener noreferrer">
+              <i data-lucide="presentation"></i> Presentación del Proyecto
+            </a>
+            <span class="sep">•</span>
+            <span class="authors-tag">Por <a href="https://github.com/Ayoxb1" target="_blank">Ayoxb1</a> & <a href="https://github.com/pabloelique" target="_blank">pabloelique</a></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- OVERLAY DE CINEMÁTICA / VIDEO DE ENTRADA -->
+      <div class="cutscene-overlay" id="cutscene-overlay">
+        <div class="cutscene-media">
+          <img id="cutscene-gif" src="assets/images/video_entrada.gif" alt="Cinemática de entrada">
+          <div class="cutscene-subtitles" id="cutscene-subtitles">
+            En una ciudad, de la nada ocurrió lo inesperado...
+          </div>
+          <button id="btn-skip-cutscene" class="btn-skip">
+            <span>Omitir</span>
+            <i data-lucide="fast-forward"></i>
+          </button>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- MINIJUEGO INTERACTIVO: ACERTIJO DEL RÍO EN EL BOSQUE -->
+    <div class="minigame-modal" id="minigame-river">
+      <div class="minigame-container">
+        
+        <div class="minigame-header">
+          <div class="minigame-title-group">
+            <span class="badge-puzzle">ENIGMA MATEMÁTICO</span>
+            <h3>Acertijo del Río en el Bosque</h3>
+            <p>Cruza a todos los amigos a la otra orilla con una sola linterna y una balsa para 2.</p>
+          </div>
+          <div class="minigame-header-actions">
+            <button id="btn-river-rules" class="btn-tool" title="Ver reglas completas">
+              <i data-lucide="help-circle"></i> Reglas
+            </button>
+            <button id="btn-river-reset" class="btn-tool" title="Reiniciar acertijo">
+              <i data-lucide="rotate-ccw"></i> Reiniciar
+            </button>
+            <button id="btn-river-exit" class="btn-tool btn-close-puzzle" title="Salir a la alameda">
+              <i data-lucide="x"></i> Salir
+            </button>
+          </div>
+        </div>
+
+        <!-- MARCADOR DEL ENIGMA -->
+        <div class="river-scoreboard">
+          <div class="score-card">
+            <span class="score-title">TIEMPO ACUMULADO</span>
+            <span class="score-value" id="river-time-display">0 min</span>
+          </div>
+          <div class="score-card target-card">
+            <span class="score-title">META ÓPTIMA</span>
+            <span class="score-value">17 min</span>
+          </div>
+          <div class="score-card lantern-card">
+            <span class="score-title">UBICACIÓN LINTERNA</span>
+            <span class="score-value" id="river-lantern-side">ORILLA INICIAL</span>
+          </div>
+        </div>
+
+        <!-- ESCENARIO VISUAL DEL RÍO -->
+        <div class="river-stage">
+          <!-- ORILLA INICIAL (IZQUIERDA) -->
+          <div class="river-bank bank-left" id="bank-initial">
+            <div class="bank-label">
+              <i data-lucide="trees"></i>
+              <span>Orilla Inicial</span>
+              <span class="lantern-indicator" id="lantern-left">
+                <i data-lucide="flashlight"></i> Linterna
+              </span>
+            </div>
+            <div class="bank-characters" id="left-characters-container">
+              <!-- Tokens de personajes iniciales -->
+            </div>
+          </div>
+
+          <!-- EL RÍO Y LA BALSA -->
+          <div class="river-water">
+            <div class="water-waves"></div>
+            <div class="river-raft" id="river-raft">
+              <div class="raft-label">Balsa (Capacidad: 2)</div>
+              <div class="raft-slots" id="raft-passengers">
+                <div class="raft-empty-slot">Hueco 1</div>
+                <div class="raft-empty-slot">Hueco 2</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ORILLA FINAL (DERECHA) -->
+          <div class="river-bank bank-right" id="bank-final">
+            <div class="bank-label">
+              <i data-lucide="mountain"></i>
+              <span>Orilla Final</span>
+              <span class="lantern-indicator" id="lantern-right">
+                <i data-lucide="flashlight"></i> Linterna
+              </span>
+            </div>
+            <div class="bank-characters" id="right-characters-container">
+              <!-- Tokens de personajes cruzados -->
+            </div>
+          </div>
+        </div>
+
+        <!-- PANEL DE ACCIÓN Y SELECCIÓN DEL CRUCE -->
+        <div class="river-controls">
+          <div class="river-selection-info" id="river-selection-info">
+            Selecciona 1 o 2 personas en la orilla que tiene la linterna para embarcar.
+          </div>
+          <button id="btn-river-cross" class="btn-cross-river" disabled>
+            <i data-lucide="ship"></i>
+            <span>REALIZAR CRUCE DE ORILLA</span>
+          </button>
+        </div>
+
+        <!-- REGISTRO DE MOVIMIENTOS -->
+        <div class="river-log-panel">
+          <span class="log-title"><i data-lucide="list-ordered"></i> Registro de cruces realizados:</span>
+          <div class="river-log-list" id="river-log-list">
+            <div class="log-entry empty">Aún no se ha realizado ningún cruce.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MINIJUEGO INTERACTIVO: ACERTIJO DE LA CAJA FUERTE (FIBONACCI 377) -->
+    <div class="minigame-modal" id="minigame-safe">
+      <div class="minigame-container safe-puzzle-container">
+        <div class="minigame-header">
+          <div class="minigame-title-group">
+            <span class="badge-puzzle">ENIGMA DE LA TRASTIENDA</span>
+            <h3>Caja Fuerte de la Tienda</h3>
+            <p>Observa la sucesión de números en la caja fuerte. ¿Qué número completa la serie de Fibonacci?</p>
+          </div>
+          <button id="btn-safe-exit" class="btn-tool btn-close-puzzle">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+
+        <div class="safe-puzzle-body">
+          <div class="safe-illustration-frame">
+            <img id="safe-puzzle-img" src="assets/images/sucesion.png" alt="Sucesión numérica" class="safe-img">
+          </div>
+
+          <div class="safe-keypad-panel">
+            <div class="sequence-display" title="Sucesión de Fibonacci">
+              <span class="seq-sub">... 55, 89, 144, 233, </span>
+              <span class="seq-unknown" id="safe-input-display">?</span>
+            </div>
+
+            <p class="safe-instruction">Introduce el 14º término de la sucesión (ej. 377):</p>
+
+            <div class="keypad-grid">
+              <button class="key-btn" data-key="1">1</button>
+              <button class="key-btn" data-key="2">2</button>
+              <button class="key-btn" data-key="3">3</button>
+              <button class="key-btn" data-key="4">4</button>
+              <button class="key-btn" data-key="5">5</button>
+              <button class="key-btn" data-key="6">6</button>
+              <button class="key-btn" data-key="7">7</button>
+              <button class="key-btn" data-key="8">8</button>
+              <button class="key-btn" data-key="9">9</button>
+              <button class="key-btn key-clear" id="btn-key-clear">C</button>
+              <button class="key-btn" data-key="0">0</button>
+              <button class="key-btn key-confirm" id="btn-key-confirm">
+                <i data-lucide="check"></i>
+              </button>
+            </div>
+
+            <div class="safe-feedback" id="safe-feedback">
+              Introduce tu solución y confirma el mecanismo.
+            </div>
+
+            <!-- BOTONES DE BOTÍN AL ABRIR LA CAJA -->
+            <div class="safe-loot-panel" id="safe-loot-panel" style="display: none;">
+              <button id="btn-loot-scroll" class="btn-loot">
+                <i data-lucide="scroll"></i> <span>Coger 1er Pergamino</span>
+              </button>
+              <button id="btn-loot-money" class="btn-loot">
+                <i data-lucide="coins"></i> <span>Coger 500 Monedas</span>
+              </button>
+              <button id="btn-loot-close" class="btn-loot btn-loot-close">
+                <i data-lucide="lock"></i> <span>Cerrar Caja Fuerte</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MINIJUEGO INTERACTIVO: ACERTIJO DE LA BIBLIOTECA (DISTRIBUCIÓN DE LIBROS) -->
+    <div class="minigame-modal" id="minigame-library">
+      <div class="minigame-container library-puzzle-container">
+        <div class="minigame-header">
+          <div class="minigame-title-group">
+            <span class="badge-puzzle">ENIGMA LÓGICO • BARRIO ANTIGUO</span>
+            <h3>Acertijo de los Estantes de la Biblioteca</h3>
+            <p>Asigna a los estantes A, B, C, D y E los valores 3, 5, 7, 9 y 11 cumpliendo las pistas.</p>
+          </div>
+          <div class="minigame-header-actions">
+            <button id="btn-library-rules" class="btn-tool" title="Ver pistas del bibliotecario">
+              <i data-lucide="help-circle"></i> Pistas
+            </button>
+            <button id="btn-library-reset" class="btn-tool" title="Reiniciar asignación">
+              <i data-lucide="rotate-ccw"></i> Reiniciar
+            </button>
+            <button id="btn-library-exit" class="btn-tool btn-close-puzzle">
+              <i data-lucide="x"></i> Salir
+            </button>
+          </div>
+        </div>
+
+        <div class="library-puzzle-body">
+          <!-- PISTAS EN TIEMPO REAL -->
+          <div class="library-clues-card">
+            <h6><i data-lucide="file-text"></i> Pistas del Bibliotecario:</h6>
+            <div class="library-conditions-checklist">
+              <div class="cond-item" id="cond-1"><span class="cond-icon">○</span> A > B (A tiene más libros que B)</div>
+              <div class="cond-item" id="cond-2"><span class="cond-icon">○</span> C < D (C tiene menos libros que D)</div>
+              <div class="cond-item" id="cond-3"><span class="cond-icon">○</span> B < E < A (E tiene más que B y menos que A)</div>
+              <div class="cond-item" id="cond-4"><span class="cond-icon">○</span> D < E (D tiene menos libros que E)</div>
+            </div>
+          </div>
+
+          <!-- ESTANTES Y ASIGNACIÓN INTERACTIVA -->
+          <div class="shelves-grid" id="shelves-grid">
+            <!-- Inyectado por JS: Estantes A, B, C, D, E con selector de números 3, 5, 7, 9, 11 -->
+          </div>
+
+          <!-- FEEDBACK Y BOTÓN DE COMPROBAR -->
+          <div class="library-actions-bar">
+            <div class="library-feedback" id="library-feedback">
+              Asigna un número de libros a cada estante sin repetir.
+            </div>
+            <button id="btn-library-check" class="btn-primary-glow">
+              <i data-lucide="check-circle-2"></i>
+              <span>COMPROBAR ASIGNACIÓN</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OVERLAY DE JUMPSCARE (SUSTO CINEMATOGRÁFICO) -->
+    <div class="jumpscare-overlay" id="jumpscare-overlay">
+      <div class="jumpscare-image-box">
+        <img id="jumpscare-img" src="assets/images/jumpscare.jpg" alt="Jumpscare">
+      </div>
+      <div class="jumpscare-text">¡¡¡AHHHHHHH!!!<br>¡ALGO TERRIBLE TE ATACA!</div>
+    </div>
+
+    <!-- MODAL DE ENTRADA DE DATOS (NICKNAME / NOMBRES DE PERSONAJES) -->
+    <div class="modal-backdrop" id="input-modal">
+      <div class="modal-box input-modal-box">
+        <div class="modal-header">
+          <h3 id="input-modal-title">Introduce Datos</h3>
+        </div>
+        <div class="modal-body input-modal-body">
+          <div class="input-preview-portrait" id="input-portrait-box">
+            <img id="input-portrait-img" src="assets/images/chica.png" alt="Previsualización">
+          </div>
+          <div class="input-form-group">
+            <label for="player-input-field" id="input-modal-label">¿Cuál es tu nickname?</label>
+            <input type="text" id="player-input-field" class="game-text-input" placeholder="Escribe aquí..." autofocus autocomplete="off" maxlength="25">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="btn-submit-input" class="btn-primary-glow">
+            <span>Confirmar</span>
+            <i data-lucide="arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL DE DIARIO / CÓDICE / INVENTARIO / GALERÍA -->
+    <div class="modal-backdrop" id="codex-modal">
+      <div class="modal-box codex-modal-box">
+        <div class="modal-header">
+          <div class="modal-title-with-icon">
+            <i data-lucide="book-marked"></i>
+            <h3>Expediente del Investigador</h3>
+          </div>
+          <button class="btn-close-modal" id="btn-close-codex">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+
+        <div class="codex-tabs">
+          <button class="codex-tab-btn active" data-tab="tab-inventory">
+            <i data-lucide="briefcase"></i> Inventario
+          </button>
+          <button class="codex-tab-btn" data-tab="tab-notes">
+            <i data-lucide="file-text"></i> Pistas & Notas
+          </button>
+          <button class="codex-tab-btn" data-tab="tab-gallery">
+            <i data-lucide="image"></i> Galería de Fotos
+          </button>
+          <button class="codex-tab-btn" data-tab="tab-music">
+            <i data-lucide="music"></i> Fonoteca BGM
+          </button>
+        </div>
+
+        <div class="modal-body codex-body">
+          <!-- PESTAÑA INVENTARIO -->
+          <div class="codex-tab-content active" id="tab-inventory">
+            <div class="inventory-grid" id="inventory-grid">
+              <!-- Inyectado por JS: Dinero, Jeroglíficos, Linterna, Llave, etc. -->
+            </div>
+          </div>
+
+          <!-- PESTAÑA NOTAS & PISTAS -->
+          <div class="codex-tab-content" id="tab-notes">
+            <div class="clues-list" id="clues-list">
+              <!-- Inyectado por JS -->
+            </div>
+          </div>
+
+          <!-- PESTAÑA GALERÍA DE ARTE -->
+          <div class="codex-tab-content" id="tab-gallery">
+            <p class="tab-description">Ilustraciones originales del caso (todas las escenas del juego):</p>
+            <div class="gallery-grid" id="gallery-grid">
+              <!-- Inyectado por JS -->
+            </div>
+          </div>
+
+          <!-- PESTAÑA FONOTECA -->
+          <div class="codex-tab-content" id="tab-music">
+            <p class="tab-description">Banda sonora original del juego:</p>
+            <div class="music-tracklist" id="music-tracklist">
+              <!-- Inyectado por JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL DE MAPA DE LA CIUDAD -->
+    <div class="modal-backdrop" id="map-modal">
+      <div class="modal-box map-modal-box">
+        <div class="modal-header">
+          <div class="modal-title-with-icon">
+            <i data-lucide="map-pin"></i>
+            <h3>Mapa Metropolitano de la Ciudad</h3>
+          </div>
+          <button class="btn-close-modal" id="btn-close-map">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+
+        <div class="modal-body map-body">
+          <div class="city-map-container">
+            <div class="map-node node-ciudad" data-scene="escenaPrincipal" title="Centro Urbano">
+              <span class="node-marker"></span>
+              <span class="node-name">Ciudad Principal</span>
+            </div>
+            <div class="map-node node-plaza" data-scene="plazaCentral" title="Plaza Mayor y Alcantarilla">
+              <span class="node-marker"></span>
+              <span class="node-name">Plaza Central</span>
+            </div>
+            <div class="map-node node-mercado" data-scene="mercadoMayorista" title="Comercios y Bazar">
+              <span class="node-marker"></span>
+              <span class="node-name">Mercado Mayorista</span>
+            </div>
+            <div class="map-node node-barrio" data-scene="barrioAntiguo" title="Biblioteca y Callejón">
+              <span class="node-marker"></span>
+              <span class="node-name">Barrio Antiguo</span>
+            </div>
+            <div class="map-node node-alameda" data-scene="alamedaAullante" title="Bosque y Río">
+              <span class="node-marker"></span>
+              <span class="node-name">Alameda Aullante</span>
+            </div>
+            <div class="map-node node-estacion" data-scene="estacionCentral" title="Red Ferroviaria">
+              <span class="node-marker"></span>
+              <span class="node-name">Estación Central</span>
+            </div>
+            <div class="map-node node-nuclear" data-scene="centralNuclear" title="Instalación Restringida (10 oro)">
+              <span class="node-marker"></span>
+              <span class="node-name">Central Nuclear</span>
+            </div>
+          </div>
+          <p class="map-hint"><i data-lucide="info"></i> Puedes hacer clic en las ubicaciones descubiertas para viajar rápidamente a ellas.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL DE CRÉDITOS Y ENLACES OFICIALES (OBLIGATORIO) -->
+    <div class="modal-backdrop" id="credits-modal">
+      <div class="modal-box credits-modal-box">
+        <div class="modal-header">
+          <div class="modal-title-with-icon">
+            <i data-lucide="award"></i>
+            <h3>Créditos del Proyecto & Enlaces de Portfolio</h3>
+          </div>
+          <button class="btn-close-modal" id="btn-close-credits">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+
+        <div class="modal-body credits-body">
+          <div class="credits-showcase">
+            <div class="credits-badge">PROYECTO ACADÉMICO / VIDEOJUEGO WEB</div>
+            <h4>El Profesor Python y El Misterio de la Alcantarilla</h4>
+            <p class="credits-desc">
+              Aventura gráfica de misterio, deducción y acertijos matemáticos desarrollada originalmente en Java con interfaz gráfica y sonido, y portada meticulosamente a una plataforma web moderna con arquitectura modular, diseño cinematográfico estilo AAA y experiencia inmersiva.
+            </p>
+          </div>
+
+          <!-- ENLACES OFICIALES OBLIGATORIOS -->
+          <div class="portfolio-links-card">
+            <h5><i data-lucide="external-link"></i> Enlaces Obligatorios del Portfolio:</h5>
+            <div class="links-buttons-stack">
+              <a href="https://github.com/Ayoxb1/Aventura-Grafica-Profesor-Python.git" target="_blank" rel="noopener noreferrer" class="portfolio-link-button btn-glow-github">
+                <i data-lucide="github"></i>
+                <div class="link-label-group">
+                  <span class="link-title">Ver código Java</span>
+                  <span class="link-sub">Repositorio GitHub con las clases Java originales</span>
+                </div>
+              </a>
+
+              <a href="https://docs.google.com/presentation/d/1KkS6pUo7uKIwQFdt-uiUk2OvdrBb7-lsdlU-fXbOa-Q/edit?slide=id.p1#slide=id.p1" target="_blank" rel="noopener noreferrer" class="portfolio-link-button btn-glow-slides">
+                <i data-lucide="presentation"></i>
+                <div class="link-label-group">
+                  <span class="link-title">Ver presentación</span>
+                  <span class="link-sub">Diapositivas oficiales del diseño y desarrollo</span>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- AUTORES -->
+          <div class="authors-card">
+            <h5><i data-lucide="users-2"></i> Desarrolladores y Autores:</h5>
+            <div class="authors-grid">
+              <a href="https://github.com/Ayoxb1" target="_blank" rel="noopener noreferrer" class="author-pill">
+                <i data-lucide="user-check"></i>
+                <span class="author-name">Ayoxb1</span>
+                <span class="author-url">github.com/Ayoxb1</span>
+              </a>
+              <a href="https://github.com/pabloelique" target="_blank" rel="noopener noreferrer" class="author-pill">
+                <i data-lucide="user-check"></i>
+                <span class="author-name">pabloelique</span>
+                <span class="author-url">github.com/pabloelique</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="credits-specs">
+            <span>Stack: HTML5 • CSS3 Glassmorphism • JavaScript ES6+ • Web Audio API</span>
+            <span>Optimizado para despliegue instantáneo en Vercel</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HUD INFERIOR (FOOTER DISCRETO Y ENLACES PERMANENTES) -->
+    <footer class="hud-footer">
+      <div class="footer-left">
+        <span class="footer-tag">ESTADO:</span>
+        <span class="footer-status" id="footer-system-status">Listo para investigar</span>
+      </div>
+
+      <div class="footer-center">
+        <!-- ENLACES DE PORTFOLIO OBLIGATORIOS VISIBLES EN TODO MOMENTO -->
+        <a href="https://github.com/Ayoxb1/Aventura-Grafica-Profesor-Python.git" target="_blank" rel="noopener noreferrer" class="footer-link">
+          <i data-lucide="code-2"></i> Ver código Java
+        </a>
+        <span class="footer-sep">|</span>
+        <a href="https://docs.google.com/presentation/d/1KkS6pUo7uKIwQFdt-uiUk2OvdrBb7-lsdlU-fXbOa-Q/edit?slide=id.p1#slide=id.p1" target="_blank" rel="noopener noreferrer" class="footer-link">
+          <i data-lucide="presentation"></i> Ver presentación
+        </a>
+        <span class="footer-sep">|</span>
+        <span class="footer-authors">Autores: <a href="https://github.com/Ayoxb1" target="_blank" rel="noopener noreferrer">Ayoxb1</a> & <a href="https://github.com/pabloelique" target="_blank" rel="noopener noreferrer">pabloelique</a></span>
+      </div>
+
+      <div class="footer-right">
+        <div class="volume-slider-group">
+          <i data-lucide="volume-1" class="vol-icon"></i>
+          <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="0.75" title="Control de volumen">
+        </div>
+        <button id="btn-restart-game" class="btn-text-subtle" title="Reiniciar aventura">
+          <i data-lucide="refresh-cw"></i> Reiniciar
+        </button>
+      </div>
+    </footer>
+
+    <!-- MODAL DE VISOR DE IMAGEN EN ALTA DEFINICIÓN (LIGHTBOX) -->
+    <div class="lightbox-modal" id="lightbox-modal">
+      <div class="lightbox-content">
+        <button id="btn-close-lightbox" class="btn-close-lightbox" title="Cerrar"><i data-lucide="x"></i></button>
+        <img id="lightbox-img" src="" alt="Ilustración ampliada">
+        <span class="lightbox-caption" id="lightbox-caption"></span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SCRIPT PRINCIPAL DEL JUEGO -->
+  <script src="script.js"></script>
+</body>
+</html>
