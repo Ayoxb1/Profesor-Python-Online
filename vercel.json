@@ -2,6 +2,7 @@
   "version": 2,
   "framework": null,
   "buildCommand": "echo 'Static build ready'",
+  "installCommand": "echo 'No install needed'",
   "outputDirectory": ".",
   "cleanUrls": true,
   "trailingSlash": false,
