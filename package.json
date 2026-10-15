@@ -1,0 +1,10 @@
+{
+  "name": "profesor-python-online",
+  "version": "1.0.0",
+  "private": true,
+  "description": "El Profesor Python y El Misterio de la Alcantarilla - Web Edition",
+  "scripts": {
+    "build": "echo 'Static build ready'",
+    "vercel-build": "echo 'Static build ready'"
+  }
+}
