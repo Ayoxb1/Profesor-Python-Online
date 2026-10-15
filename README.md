@@ -1,4 +1,4 @@
-# 🕹️ El Profesor Python y El Misterio de la Alcantarilla (Web Edition)
+# 🕹️ El Profesor Python y El Misterio de la Alcantarilla
 
 Una aventura gráfica interactiva y cinematográfica desarrollada íntegramente en HTML5, CSS3 moderno y Vanilla JavaScript. Adaptación web completa y fiel de la aventura gráfica original en Java, optimizada con una interfaz HUD inmersiva, efectos glassmorphism, minijuegos de acertijos, banda sonora ambiental y soporte para despliegue directo en Vercel.
 
