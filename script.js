@@ -213,6 +213,12 @@ function triggerJumpScare(onComplete) {
 
   AudioSys.stopBgm();
   AudioSys.playSfx("jumpscare", 1.0);
+  
+  const jumpscareImg = document.getElementById("jumpscare-img");
+  if (jumpscareImg && !jumpscareImg.src) {
+    jumpscareImg.src = jumpscareImg.dataset.src || "assets/images/jumpscare.jpg";
+  }
+
   overlay.classList.add("active");
 
   setTimeout(() => {

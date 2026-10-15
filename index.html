@@ -18,7 +18,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   
   <!-- Hoja de estilos del juego -->
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=3.0">
 </head>
 <body class="theme-noir">
 
@@ -198,7 +198,7 @@
       </div>
 
       <!-- OVERLAY DE CINEMÁTICA / VIDEO DE ENTRADA -->
-      <div class="cutscene-overlay" id="cutscene-overlay">
+      <div class="cutscene-overlay" id="cutscene-overlay" style="display: none;">
         <div class="cutscene-media">
           <img id="cutscene-gif" src="" data-src="assets/images/video_entrada.gif" alt="Cinemática de entrada">
           <div class="cutscene-subtitles" id="cutscene-subtitles">
@@ -214,7 +214,7 @@
     </main>
 
     <!-- MINIJUEGO INTERACTIVO: ACERTIJO DEL RÍO EN EL BOSQUE -->
-    <div class="minigame-modal" id="minigame-river">
+    <div class="minigame-modal" id="minigame-river" style="display: none;">
       <div class="minigame-container">
         
         <div class="minigame-header">
@@ -318,7 +318,7 @@
     </div>
 
     <!-- MINIJUEGO INTERACTIVO: ACERTIJO DE LA CAJA FUERTE (FIBONACCI 377) -->
-    <div class="minigame-modal" id="minigame-safe">
+    <div class="minigame-modal" id="minigame-safe" style="display: none;">
       <div class="minigame-container safe-puzzle-container">
         <div class="minigame-header">
           <div class="minigame-title-group">
@@ -333,7 +333,7 @@
 
         <div class="safe-puzzle-body">
           <div class="safe-illustration-frame">
-            <img id="safe-puzzle-img" src="assets/images/sucesion.png" alt="Sucesión numérica" class="safe-img">
+            <img id="safe-puzzle-img" src="" data-src="assets/images/sucesion.png" alt="Sucesión numérica" class="safe-img">
           </div>
 
           <div class="safe-keypad-panel">
@@ -383,7 +383,7 @@
     </div>
 
     <!-- MINIJUEGO INTERACTIVO: ACERTIJO DE LA BIBLIOTECA (DISTRIBUCIÓN DE LIBROS) -->
-    <div class="minigame-modal" id="minigame-library">
+    <div class="minigame-modal" id="minigame-library" style="display: none;">
       <div class="minigame-container library-puzzle-container">
         <div class="minigame-header">
           <div class="minigame-title-group">
@@ -436,15 +436,15 @@
     </div>
 
     <!-- OVERLAY DE JUMPSCARE (SUSTO CINEMATOGRÁFICO) -->
-    <div class="jumpscare-overlay" id="jumpscare-overlay">
+    <div class="jumpscare-overlay" id="jumpscare-overlay" style="display: none;">
       <div class="jumpscare-image-box">
-        <img id="jumpscare-img" src="assets/images/jumpscare.jpg" alt="Jumpscare">
+        <img id="jumpscare-img" src="" data-src="assets/images/jumpscare.jpg" alt="Jumpscare">
       </div>
       <div class="jumpscare-text">¡¡¡AHHHHHHH!!!<br>¡ALGO TERRIBLE TE ATACA!</div>
     </div>
 
     <!-- MODAL DE ENTRADA DE DATOS (NICKNAME / NOMBRES DE PERSONAJES) -->
-    <div class="modal-backdrop" id="input-modal">
+    <div class="modal-backdrop" id="input-modal" style="display: none;">
       <div class="modal-box input-modal-box">
         <div class="modal-header">
           <h3 id="input-modal-title">Introduce Datos</h3>
@@ -468,7 +468,7 @@
     </div>
 
     <!-- MODAL DE DIARIO / CÓDICE / INVENTARIO / GALERÍA -->
-    <div class="modal-backdrop" id="codex-modal">
+    <div class="modal-backdrop" id="codex-modal" style="display: none;">
       <div class="modal-box codex-modal-box">
         <div class="modal-header">
           <div class="modal-title-with-icon">
@@ -530,7 +530,7 @@
     </div>
 
     <!-- MODAL DE MAPA DE LA CIUDAD -->
-    <div class="modal-backdrop" id="map-modal">
+    <div class="modal-backdrop" id="map-modal" style="display: none;">
       <div class="modal-box map-modal-box">
         <div class="modal-header">
           <div class="modal-title-with-icon">
@@ -579,7 +579,7 @@
     </div>
 
     <!-- MODAL DE CRÉDITOS Y ENLACES OFICIALES (OBLIGATORIO) -->
-    <div class="modal-backdrop" id="credits-modal">
+    <div class="modal-backdrop" id="credits-modal" style="display: none;">
       <div class="modal-box credits-modal-box">
         <div class="modal-header">
           <div class="modal-title-with-icon">
@@ -679,7 +679,7 @@
     </footer>
 
     <!-- MODAL DE VISOR DE IMAGEN EN ALTA DEFINICIÓN (LIGHTBOX) -->
-    <div class="lightbox-modal" id="lightbox-modal">
+    <div class="lightbox-modal" id="lightbox-modal" style="display: none;">
       <div class="lightbox-content">
         <button id="btn-close-lightbox" class="btn-close-lightbox" title="Cerrar"><i data-lucide="x"></i></button>
         <img id="lightbox-img" src="" alt="Ilustración ampliada">
@@ -690,6 +690,6 @@
   </div>
 
   <!-- SCRIPT PRINCIPAL DEL JUEGO -->
-  <script src="script.js"></script>
+  <script src="script.js?v=3.0"></script>
 </body>
 </html>

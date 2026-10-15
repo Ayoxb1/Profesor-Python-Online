@@ -561,7 +561,7 @@ html, body {
 }
 
 .lightbox-modal.active {
-  display: flex;
+  display: flex !important;
 }
 
 .lightbox-content {
@@ -927,7 +927,7 @@ html, body {
 }
 
 .cutscene-overlay.active {
-  display: flex;
+  display: flex !important;
 }
 
 .cutscene-media {
@@ -1006,7 +1006,7 @@ html, body {
 }
 
 .minigame-modal.active {
-  display: flex;
+  display: flex !important;
 }
 
 .minigame-container {
@@ -1552,7 +1552,7 @@ html, body {
 }
 
 .modal-backdrop.active {
-  display: flex;
+  display: flex !important;
 }
 
 .modal-box {
@@ -2521,7 +2521,7 @@ html, body {
 }
 
 .jumpscare-overlay.active {
-  display: flex;
+  display: flex !important;
   animation: jumpScareShake 0.1s infinite;
 }
 
